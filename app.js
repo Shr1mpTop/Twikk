@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 // 连接 MongoDB
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/twikk', {
+    await mongoose.connect('mongodb://127.0.0.1:27017/twikk', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
