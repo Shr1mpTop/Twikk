@@ -40,6 +40,8 @@ mongoose.connection.on('disconnected', () => {
 
 // 导入模型
 require('./app/models/user');
+require('./app/models/tweet');
+
 
 // 中间件
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -1,100 +1,100 @@
 <%- include('../layouts/header') %>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 侧边栏 -->
-            <div class="col-md-3 bg-dark vh-100 position-fixed">
-                <div class="p-4">
-                    <div class="logo mb-4">
-                        <i class="fab fa-twitter"></i> Twikk
-                    </div>
-
-                    <nav class="nav flex-column">
-                        <a class="nav-link text-white mb-3" href="/dashboard">
-                            <i class="fas fa-home me-3"></i>主页
-                        </a>
-                        <a class="nav-link text-white mb-3" href="#" onclick="showUserInfo()">
-                            <i class="fas fa-user me-3"></i>个人资料
-                        </a>
-                        <a class="nav-link text-white mb-3" href="/logout">
-                            <i class="fas fa-sign-out-alt me-3"></i>退出登录
-                        </a>
-                    </nav>
-                </div>
-            </div>
-
-            <!-- 主内容区 -->
-            <div class="col-md-9 offset-md-3">
-                <div class="p-4">
-                    <div class="twitter-card p-4 mb-4">
-                        <h3 class="text-twitter mb-3">
-                            <i class="fas fa-home me-2"></i>欢迎来到 Twikk, <%= user.name %>!
-                        </h3>
-                        <p class="text-muted">这是您的个人主页。在这里您可以发布推文、查看时间线和管理您的账户。</p>
-                    </div>
-
-                    <!-- 用户信息卡片 -->
-                    <div class="twitter-card p-4 mb-4">
-                        <h4 class="text-twitter mb-3">
-                            <i class="fas fa-user-circle me-2"></i>个人信息
-                        </h4>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>姓名:</strong>
-                                    <%= user.name %>
-                                </p>
-                                <p><strong>用户名:</strong> @<%= user.username %>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>邮箱:</strong>
-                                    <%= user.email %>
-                                </p>
-                                <p><strong>用户ID:</strong>
-                                    <%= user.id %>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 发推文区域 -->
-                    <div class="twitter-card p-4 mb-4">
-                        <h4 class="text-twitter mb-3">
-                            <i class="fas fa-feather-alt me-2"></i>发布新推文
-                        </h4>
-                        <form>
-                            <div class="mb-3">
-                                <textarea class="form-control" rows="3" placeholder="有什么新想法？"></textarea>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted">0/280</span>
-                                <button type="submit" class="btn btn-twitter">
-                                    <i class="fas fa-paper-plane me-2"></i>发布推文
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- 时间线 -->
-                    <div class="twitter-card p-4">
-                        <h4 class="text-twitter mb-3">
-                            <i class="fas fa-stream me-2"></i>时间线
-                        </h4>
-                        <div class="text-center text-muted py-5">
-                            <i class="fas fa-comments fa-3x mb-3"></i>
-                            <p>暂无推文</p>
-                            <p>开始关注其他用户或发布您的第一条推文！</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 bg-dark vh-100 position-fixed">
+      <div class="p-4">
+        <div class="logo mb-4"><i class="fab fa-twitter"></i> Twikk</div>
+        <nav class="nav flex-column">
+          <a class="nav-link text-white mb-3" href="/dashboard">
+            <i class="fas fa-home me-3"></i>Home
+          </a>
+          <a class="nav-link text-white mb-3" href="#" onclick="showUserInfo()">
+            <i class="fas fa-user me-3"></i>Profile
+          </a>
+          <a class="nav-link text-white mb-3" href="/logout">
+            <i class="fas fa-sign-out-alt me-3"></i>Sign out
+          </a>
+        </nav>
+      </div>
     </div>
 
-    <script>
-        function showUserInfo() {
-            alert('用户信息：\n姓名: <%= user.name %>\n用户名: @<%= user.username %>\n邮箱: <%= user.email %>');
-        }
-    </script>
+    <!-- Main -->
+    <div class="col-md-9 offset-md-3">
+      <div class="p-4">
+        <!-- Welcome -->
+        <div class="twitter-card p-4 mb-4">
+          <h3 class="text-twitter mb-3">
+            <i class="fas fa-home me-2"></i>Welcome to Twikk, <%= user.name %>!
+          </h3>
+          <p class="text-muted">This is your dashboard. Post tweets, view the timeline, and manage your account.</p>
+        </div>
 
-    <%- include('../layouts/footer') %>
+        <!-- Profile -->
+        <div class="twitter-card p-4 mb-4">
+          <h4 class="text-twitter mb-3">
+            <i class="fas fa-user-circle me-2"></i>Profile
+          </h4>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Name:</strong> <%= user.name %></p>
+              <p><strong>Username:</strong> @<%= user.username %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Email:</strong> <%= user.email %></p>
+              <p><strong>User ID:</strong> <%= user.id %></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compose -->
+        <div class="twitter-card p-4 mb-4">
+          <h4 class="text-twitter mb-3">
+            <i class="fas fa-feather-alt me-2"></i>Compose new Tweet
+          </h4>
+          <form action="/tweet" method="POST">
+            <div class="mb-3">
+              <textarea class="form-control" name="content" rows="3" maxlength="280" placeholder="What's happening?"></textarea>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted">Up to 280 characters</span>
+              <button type="submit" class="btn btn-twitter">
+                <i class="fas fa-paper-plane me-2"></i>Tweet
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Timeline -->
+        <div class="twitter-card p-4">
+          <h4 class="text-twitter mb-3">
+            <i class="fas fa-stream me-2"></i>Timeline
+          </h4>
+          <% if (tweets && tweets.length > 0) { %>
+            <% tweets.forEach(t => { %>
+              <div class="mb-3 pb-2 border-bottom">
+                <p><%= t.content %></p>
+                <small class="text-muted">by <%= t.authorName %> · <%= new Date(t.createdAt).toLocaleString() %></small>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="text-center text-muted py-5">
+              <i class="fas fa-comments fa-3x mb-3"></i>
+              <p>No tweets yet</p>
+              <p>Start by posting your first one!</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showUserInfo() {
+    alert('User info:\nName: <%= user.name %>\nUsername: @<%= user.username %>\nEmail: <%= user.email %>');
+  }
+</script>
+
+<%- include('../layouts/footer') %>

@@ -1,119 +1,95 @@
+// app/controllers/users.js
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const User = mongoose.model('User');
 
-// 显示注册页面
+// Register page
 exports.getRegister = (req, res) => {
-    res.render('pages/register', { error: null, success: null });
+  res.render('pages/register', { error: null, success: null });
 };
 
-// 处理注册请求
+// Handle register
 exports.postRegister = async (req, res) => {
-    try {
-        const { name, username, email, password, confirmPassword } = req.body;
+  const { name, username, email, password, confirmPassword } = req.body;
 
-        // 验证密码确认
-        if (password !== confirmPassword) {
-            return res.render('pages/register', {
-                error: '密码确认不匹配',
-                success: null
-            });
-        }
+  if (!name || !username || !email || !password || !confirmPassword) {
+    return res.render('pages/register', { error: 'Please fill in all fields', success: null });
+  }
+  if (password !== confirmPassword) {
+    return res.render('pages/register', { error: 'Passwords do not match', success: null });
+  }
 
-        // 创建新用户
-        const user = new User({
-            name,
-            username,
-            email,
-            password
-        });
-
-        await user.save();
-
-        res.render('pages/register', {
-            error: null,
-            success: '注册成功！请登录您的账户。'
-        });
-
-    } catch (error) {
-        let errorMessage = '注册失败，请重试。';
-
-        if (error.code === 11000) {
-            if (error.keyPattern.email) {
-                errorMessage = '该邮箱已被注册';
-            } else if (error.keyPattern.username) {
-                errorMessage = '该用户名已被使用';
-            }
-        }
-
-        res.render('pages/register', {
-            error: errorMessage,
-            success: null
-        });
+  try {
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.render('pages/register', { error: 'Email is already registered', success: null });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, username, email, password: hashedPassword });
+    await user.save();
+
+    req.session.userId = user._id.toString();
+    req.session.user = {
+      id: user._id.toString(),
+      name: user.name,
+      username: user.username,
+      email: user.email
+    };
+
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error(err);
+    res.render('pages/register', { error: 'Registration failed. Please try again later', success: null });
+  }
 };
 
-// 显示登录页面
+// Login page
 exports.getLogin = (req, res) => {
-    res.render('pages/login', { error: null });
+  res.render('pages/login', { error: null });
 };
 
-// 处理登录请求
+// Handle login
 exports.postLogin = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  const { email, password } = req.body;
 
-        // 查找用户
-        const user = await User.findOne({ email: email.toLowerCase() });
+  if (!email || !password) {
+    return res.render('pages/login', { error: 'Please enter email and password' });
+  }
 
-        if (!user) {
-            return res.render('pages/login', {
-                error: '邮箱或密码错误'
-            });
-        }
-
-        // 验证密码
-        const isMatch = await user.comparePassword(password);
-
-        if (!isMatch) {
-            return res.render('pages/login', {
-                error: '邮箱或密码错误'
-            });
-        }
-
-        // 登录成功，设置 session
-        req.session.userId = user._id;
-        req.session.user = {
-            id: user._id,
-            name: user.name,
-            username: user.username,
-            email: user.email
-        };
-
-        res.redirect('/dashboard');
-
-    } catch (error) {
-        console.error('Login error:', error);
-        res.render('pages/login', {
-            error: '登录失败，请重试'
-        });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.render('pages/login', { error: 'Email is not registered' });
     }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.render('pages/login', { error: 'Incorrect password' });
+    }
+
+    req.session.userId = user._id.toString();
+    req.session.user = {
+      id: user._id.toString(),
+      name: user.name,
+      username: user.username,
+      email: user.email
+    };
+
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error(err);
+    res.render('pages/login', { error: 'Login failed. Please try again later' });
+  }
 };
 
-// 注销
+// Logout
 exports.logout = (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Session destroy error:', err);
-        }
-        res.redirect('/login');
-    });
+  req.session.destroy(() => res.redirect('/login'));
 };
 
-// 用户主页
+// Dashboard fallback
 exports.dashboard = (req, res) => {
-    if (!req.session.userId) {
-        return res.redirect('/login');
-    }
-
-    res.render('pages/dashboard', { user: req.session.user });
+  if (!req.session.user) return res.redirect('/login');
+  res.render('pages/dashboard', { user: req.session.user, tweets: [] });
 };
