@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -10,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 连接 MongoDB
 const connectDB = async () => {
     try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/twikk', {
+        await mongoose.connect('mongodb://127.0.0.1:27017/twikk', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
@@ -41,7 +42,7 @@ mongoose.connection.on('disconnected', () => {
 // 导入模型
 require('./app/models/user');
 require('./app/models/tweet');
-
+require('./app/models/notification');
 
 // 中间件
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -63,7 +64,10 @@ app.set('views', path.join(__dirname, 'app/views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 路由
+const notificationRoutes = require('./config/notificationRoutes');
+app.use('/', notificationRoutes);
 require('./config/routes')(app);
+
 
 // 启动服务器
 app.listen(PORT, () => {
