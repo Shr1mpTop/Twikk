@@ -1,7 +1,7 @@
 // config/routes.js
 const path = require('path');
 
-const users  = require(path.join(__dirname, '..', 'app', 'controllers', 'users'));
+const users = require(path.join(__dirname, '..', 'app', 'controllers', 'users'));
 const tweets = require(path.join(__dirname, '..', 'app', 'controllers', 'tweets'));
 
 module.exports = function (app) {
@@ -28,4 +28,21 @@ module.exports = function (app) {
 
   // 发推
   app.post('/tweet', tweets.create);
+  app.get('/messages', (req, res) => {
+    // 确保用户已登录
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
+
+    res.render('pages/message.ejs', { user: req.session.user });
+  });
+
+  app.get('/gpt-chat', (req, res) => {
+    // 检查用户是否已登录，如果未登录则重定向
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    // 将 req.session.user 对象传递给 gpt.ejs 模板
+    res.render('pages/gpt', { user: req.session.user });
+});
 };

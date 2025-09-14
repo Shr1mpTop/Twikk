@@ -9,6 +9,8 @@ exports.getRegister = (req, res) => {
 };
 
 // Handle register
+// app/controllers/users.js
+
 exports.postRegister = async (req, res) => {
   const { name, username, email, password, confirmPassword } = req.body;
 
@@ -25,9 +27,9 @@ exports.postRegister = async (req, res) => {
       return res.render('pages/register', { error: 'Email is already registered', success: null });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, username, email, password: hashedPassword });
-    await user.save();
+    // 移除这一行的哈希，让 user.js 中的 pre('save') 钩子来处理
+    const user = new User({ name, username, email, password });
+    await user.save(); // 密码在这里被 user.js 中的 pre('save') 钩子自动哈希
 
     req.session.userId = user._id.toString();
     req.session.user = {
