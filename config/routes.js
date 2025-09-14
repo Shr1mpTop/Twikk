@@ -1,6 +1,6 @@
 // config/routes.js
 const path = require('path');
-
+const { chatController } = require('../app/controllers/grok.js');
 const users = require(path.join(__dirname, '..', 'app', 'controllers', 'users'));
 const tweets = require(path.join(__dirname, '..', 'app', 'controllers', 'tweets'));
 
@@ -35,14 +35,15 @@ module.exports = function (app) {
       return res.redirect('/login');
     }
 
-    res.render('pages/message.ejs', { user: req.session.user,pageStyles: '/css/message.css', pageScripts: '/js/message.js' });
+    res.render('pages/message.ejs', { user: req.session.user, pageStyles: '/css/message.css', pageScripts: '/js/message.js' });
   });
-// GPT 聊天页面
+  // GPT 聊天页面
   app.get('/gpt-chat', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/login');
+      return res.redirect('/login');
     }
     // 将 req.session.user 对象传递给 gpt.ejs 模板
-    res.render('pages/gpt', { user: req.session.user,pageStyles: '/css/gpt.css', pageScripts: '/js/Grok.js' });
-});
+    res.render('pages/gpt', { user: req.session.user, pageStyles: '/css/gpt.css', pageScripts: '/js/Grok.js' });
+  });
+  app.post("/api/chat", chatController);
 };
