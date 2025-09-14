@@ -1,14 +1,21 @@
 <%- include('../layouts/header') %>
-    <style>
-
-    </style>
+    
     <div class="container-fluid">
         <div class="row">
             <%- include('../layouts/sidebar', { user: user }) %>
-                <!-- main grok -->
-                <div class="col-md-9 offset-md-3">
-                    
+                <div class="col-md-9 offset-md-3 black-bg">
+                    <div class="text-center">
+                        <img src="/images/grok.svg" alt="LLM Model" class="img-fluid" style="min-width: 90px;">
+                        <img src="/images/grok-text.svg" alt="LLM Model" class="img-fluid" style="min-width: 120px;">
+                    </div>
+                    <div class="chat-input-local mx-auto">
+                        <textarea class="chat-textarea" placeholder="发送消息..." rows="1"></textarea>
+                        <button class="send-btn" type="button">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
                 </div>
         </div>
-
-        <%- include('../layouts/footer') %>
+    </div>
+    
+<%- include('../layouts/footer') %>
