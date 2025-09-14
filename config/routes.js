@@ -28,6 +28,12 @@ module.exports = function (app) {
 
   // 发推
   app.post('/tweet', tweets.create);
+  
+  // API: 获取更多推文（无限滚动）
+  app.get('/api/tweets', tweets.getMoreTweets);
+  
+  // API: 搜索推文
+  app.get('/api/search', tweets.search);
 
   // chat功能
   app.get('/messages', (req, res) => {
