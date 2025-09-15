@@ -5,7 +5,10 @@ const Tweet = require('../models/tweet');
 // 显示Communities页面
 exports.getCommunities = (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  res.render('pages/communities', { user: req.session.user });
+  res.render('pages/communities', { 
+    user: req.session.user,
+    pageStyles: '/css/communities.css'
+  });
 };
 
 // 显示特定社群的推文
@@ -46,7 +49,8 @@ exports.getCommunityTweets = async (req, res) => {
       stats: stats,
       currentPage: page,
       hasMore: hasMore,
-      totalTweets: totalTweets
+      totalTweets: totalTweets,
+      pageStyles: '/css/communities.css'
     });
     
   } catch (error) {
