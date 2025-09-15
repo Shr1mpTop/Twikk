@@ -5,7 +5,8 @@
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
-        "dev": "nodemon app.js"
+        "dev": "nodemon app.js",
+        "production": "NODE_ENV=production HOST=0.0.0.0 PORT=3000 node app.js"
     },
     "keywords": [
         "twitter",

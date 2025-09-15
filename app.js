@@ -5,14 +5,49 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require("cors");
 
+// 加载环境变量
+require('dotenv').config();
+
 const app = express();
-app.use(cors());
+
+// 配置监听地址和端口
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0'; // 允许外部访问
+
+// 允许跨域（生产环境请按需限制来源）
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : [
+        'http://hezhili.online:3000',
+        'https://hezhili.online:3000',
+        'http://localhost:3000',
+        'https://localhost:3000'
+    ];
+
+const corsOptions = {
+    origin: allowedOrigins,
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, 'public')));
 // 连接 MongoDB
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/twikk', {
+        // 支持从环境变量读取 Mongo 连接信息，便于线上部署
+        const mongoUser = process.env.MONGO_USER || '';
+        const mongoPass = process.env.MONGO_PASS || '';
+        const mongoHost = process.env.MONGO_HOST || '127.0.0.1';
+        const mongoPort = process.env.MONGO_PORT || '27017';
+        const mongoDB = process.env.MONGO_DB || 'twikk';
+
+        let authPart = '';
+        if (mongoUser && mongoPass) {
+            authPart = `${encodeURIComponent(mongoUser)}:${encodeURIComponent(mongoPass)}@`;
+        }
+
+        const mongoUri = `mongodb://${authPart}${mongoHost}:${mongoPort}/${mongoDB}`;
+        await mongoose.connect(mongoUri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
@@ -51,10 +86,13 @@ app.use(bodyParser.json());
 
 // Session 配置
 app.use(session({
-    secret: 'twikk-secret-key',
+    secret: process.env.SESSION_SECRET || 'twikk-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: {
+        secure: process.env.NODE_ENV === 'production' && process.env.HTTPS === 'true',
+        maxAge: 24 * 60 * 60 * 1000 // 24小时
+    }
 }));
 
 // 设置视图引擎
@@ -71,6 +109,7 @@ require('./config/routes')(app);
 
 
 // 启动服务器
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
+    console.log(`Access your app at: http://hezhili.online:${PORT}`);
 });
