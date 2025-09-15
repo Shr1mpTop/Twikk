@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// 密码加密中间件
+// Password hashing middleware
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
 
@@ -43,12 +43,12 @@ UserSchema.pre('save', async function (next) {
     }
 });
 
-// 密码验证方法
+// Password verification method
 UserSchema.methods.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
-// 输出时隐藏密码
+// Hide password when converting to JSON
 UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;

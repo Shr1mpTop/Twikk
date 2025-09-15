@@ -51,13 +51,13 @@
     text-align: center;
 }
 
-/* 主背景优化 */
+/* Main background enhancements */
 .container-fluid {
     background: linear-gradient(135deg, #0f1419 0%, #15202b 50%, #192734 100%);
     min-height: 100vh;
 }
 
-/* Twitter Logo 左侧装饰 */
+/* Twitter logo left-side decoration */
 .fab.fa-twitter {
     color: #1da1f2;
     animation: twitterPulse 3s ease-in-out infinite;
@@ -76,7 +76,7 @@
     }
 }
 
-/* 注册卡片增强 */
+/* Register card enhancements */
 .twitter-card {
     background: linear-gradient(145deg, #192734 0%, #253341 100%);
     border: 1px solid #38444d;
@@ -112,7 +112,7 @@
     }
 }
 
-/* Logo 样式增强 */
+/* Logo style enhancements */
 .logo {
     font-size: 1.8rem;
     font-weight: bold;
@@ -135,7 +135,7 @@
     }
 }
 
-/* 表单标题 */
+/* Form title */
 h2 {
     color: #ffffff;
     font-weight: 600;
@@ -143,7 +143,7 @@ h2 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* 表单输入框增强 */
+/* Form input enhancements */
 .form-control {
     background-color: #192734;
     border: 2px solid #38444d;
@@ -167,7 +167,7 @@ h2 {
     color: #8899a6;
 }
 
-/* 表单标签 */
+/* Form labels */
 .form-label {
     color: #ffffff;
     font-weight: 500;
@@ -176,14 +176,14 @@ h2 {
     letter-spacing: 0.5px;
 }
 
-/* 帮助文本 */
+/* Helper text */
 .form-text {
     color: #8899a6;
     font-size: 13px;
     margin-top: 4px;
 }
 
-/* 注册按钮增强 */
+/* Register button enhancements */
 .btn-twitter {
     background: linear-gradient(135deg, #1da1f2 0%, #1991db 100%);
     border: none;
@@ -208,7 +208,7 @@ h2 {
     transition: all 0.1s ease;
 }
 
-/* 警告和成功消息 */
+/* Alert and success messages */
 .alert {
     border: none;
     border-radius: 12px;
@@ -229,7 +229,7 @@ h2 {
     color: #4ade80;
 }
 
-/* 链接样式 */
+/* Link styles */
 .text-twitter {
     color: #1da1f2;
     text-decoration: none;
@@ -242,13 +242,13 @@ h2 {
     text-shadow: 0 0 8px rgba(29, 161, 242, 0.8);
 }
 
-/* 底部链接区域 */
+/* Footer link area */
 .text-center.mt-4 p {
     color: #8899a6;
     margin-bottom: 8px;
 }
 
-/* 响应式优化 */
+/* Responsive optimizations */
 @media (max-width: 768px) {
     .fab.fa-twitter {
         font-size: 8rem !important;
@@ -268,7 +268,7 @@ h2 {
     }
 }
 
-/* 微交互动画 */
+/* Micro interaction animations */
 .form-control {
     position: relative;
 }
@@ -278,7 +278,7 @@ h2 {
     transition: color 0.3s ease;
 }
 
-/* 输入验证状态 */
+/* Input validation states */
 .form-control:valid {
     border-color: #17bf63;
 }
@@ -287,7 +287,7 @@ h2 {
     border-color: #f91880;
 }
 
-/* 加载状态 */
+/* Loading state */
 .btn-twitter:disabled {
     background: #38444d;
     cursor: not-allowed;
@@ -295,7 +295,7 @@ h2 {
     box-shadow: none;
 }
 
-/* 图标动画 */
+/* Icon animations */
 .fa-user-plus,
 .fa-sign-in-alt {
     transition: transform 0.3s ease;
