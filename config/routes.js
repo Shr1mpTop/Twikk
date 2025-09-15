@@ -3,6 +3,7 @@ const path = require('path');
 const { chatController } = require('../app/controllers/grok.js');
 const users = require(path.join(__dirname, '..', 'app', 'controllers', 'users'));
 const tweets = require(path.join(__dirname, '..', 'app', 'controllers', 'tweets'));
+const communities = require(path.join(__dirname, '..', 'app', 'controllers', 'communities'));
 
 module.exports = function (app) {
   // 首页：根据是否登录跳转
@@ -43,6 +44,16 @@ module.exports = function (app) {
 
     res.render('pages/message.ejs', { user: req.session.user, pageStyles: '/css/message.css', pageScripts: '/js/message.js' });
   });
+
+  // Communities页面
+  app.get('/communities', communities.getCommunities);
+  
+  // 社群推文页面
+  app.get('/communities/:category', communities.getCommunityTweets);
+  
+  // API: 获取更多社群推文（无限滚动）
+  app.get('/api/communities/:category/tweets', communities.getMoreCommunityTweets);
+
   // GPT 聊天页面
   app.get('/gpt-chat', (req, res) => {
     if (!req.session.user) {

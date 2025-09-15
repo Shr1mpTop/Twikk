@@ -116,6 +116,10 @@
                             <i class="fas fa-envelope me-3"></i>Messages
                         </a>
 
+                        <a class="nav-link text-white mb-3" href="/communities">
+                            <i class="fas fa-users me-3"></i>Communities
+                        </a>
+
                         <a class="nav-link text-white mb-3" href="/gpt-chat">
                             <i class="fas fa-robot me-3"></i>Grok
                         </a>
@@ -201,17 +205,15 @@
             <% if (tweets && tweets.length > 0) { %>
               <% tweets.forEach(t => { %>
                 <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm">
-                  <div class="tweet-content mb-2">
-                    <p class="mb-0"><%= t.content %></p>
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-circle text-twitter me-2"></i>
+                    <strong class="text-white"><%= t.authorName %></strong>
+                    <span class="text-muted ms-2">@<%= t.authorName.toLowerCase().replace(/\s+/g, '') %></span>
                   </div>
-                  <div class="tweet-meta d-flex justify-content-between align-items-center">
-                    <small class="text-muted">
-                      <i class="fas fa-user me-1"></i>by <%= t.authorName %>
-                    </small>
-                    <small class="text-muted">
-                      <i class="fas fa-clock me-1"></i><%= new Date(t.createdAt).toLocaleString() %>
-                    </small>
-                  </div>
+                  <p class="text-light mb-0"><%= t.content %></p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i><%= new Date(t.createdAt).toLocaleString() %>
+                  </small>
                 </div>
               <% }) %>
             <% } else { %>
@@ -230,6 +232,7 @@
               <span id="load-more-text">Load More Tweets</span>
             </button>
           </div>
+          
           
           <!-- 没有更多推文提示 -->
           <div id="no-more-tweets" class="text-center text-muted mt-4" style="display: none;">
@@ -263,7 +266,25 @@
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 500);
+    
+    // 添加滚动监听器实现无限滚动
+    window.addEventListener('scroll', handleScroll);
   });
+
+  // 滚动处理函数
+  function handleScroll() {
+    // 检查是否滚动到页面底部附近
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    // 当滚动到距离底部200px时自动加载更多
+    if (scrollTop + windowHeight >= documentHeight - 200) {
+      if (hasMoreTweets && !isLoading) {
+        loadMoreTweets();
+      }
+    }
+  }
 
   // 加载更多推文
   async function loadMoreTweets() {
@@ -277,7 +298,7 @@
     // 显示加载状态
     loadingSpinner.style.display = 'inline-block';
     loadMoreText.textContent = 'Loading...';
-    loadMoreBtn.disabled = true;
+    if (loadMoreBtn) loadMoreBtn.disabled = true;
     
     try {
       // 添加0.1秒延迟，让分页效果更明显
@@ -293,17 +314,15 @@
           const tweetElement = document.createElement('div');
           tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
           tweetElement.innerHTML = `
-            <div class="tweet-content mb-2">
-              <p class="mb-0">${tweet.content}</p>
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-user-circle text-twitter me-2"></i>
+              <strong class="text-white">${tweet.authorName}</strong>
+              <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
             </div>
-            <div class="tweet-meta d-flex justify-content-between align-items-center">
-              <small class="text-muted">
-                <i class="fas fa-user me-1"></i>by ${tweet.authorName}
-              </small>
-              <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
-              </small>
-            </div>
+            <p class="text-light mb-0">${tweet.content}</p>
+            <small class="text-muted">
+              <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
+            </small>
           `;
           tweetsContainer.appendChild(tweetElement);
         });
@@ -327,7 +346,7 @@
       // 隐藏加载状态
       loadingSpinner.style.display = 'none';
       loadMoreText.textContent = 'Load More Tweets';
-      loadMoreBtn.disabled = false;
+      if (loadMoreBtn) loadMoreBtn.disabled = false;
       isLoading = false;
     }
   }
@@ -414,17 +433,15 @@
         const tweetElement = document.createElement('div');
         tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
         tweetElement.innerHTML = `
-          <div class="tweet-content mb-2">
-            <p class="mb-0">${highlightSearchTerm(tweet.content, query)}</p>
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-user-circle text-twitter me-2"></i>
+            <strong class="text-white">${tweet.authorName}</strong>
+            <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
           </div>
-          <div class="tweet-meta d-flex justify-content-between align-items-center">
-            <small class="text-muted">
-              <i class="fas fa-user me-1"></i>by ${tweet.authorName}
-            </small>
-            <small class="text-muted">
-              <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
-            </small>
-          </div>
+          <p class="text-light mb-0">${highlightSearchTerm(tweet.content, query)}</p>
+          <small class="text-muted">
+            <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
+          </small>
         `;
         tweetsContainer.appendChild(tweetElement);
       });
@@ -462,6 +479,7 @@
       performSearch();
     }
   });
+
 </script>
 
 <%- include('../layouts/footer') %>

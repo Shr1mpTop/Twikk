@@ -1,0 +1,327 @@
+<%- include('../layouts/header') %>
+
+<style>
+  .tweet-card {
+    background-color: #253341 !important;
+    border: 1px solid #38444d !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+  }
+  
+  .tweet-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4) !important;
+    border-color: #1da1f2 !important;
+    background-color: #2a3a4a !important;
+  }
+  
+  .tweet-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #ecf0f1;
+  }
+  
+  .tweet-meta {
+    border-top: 1px solid #38444d;
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+  
+  .tweet-meta small {
+    font-size: 12px;
+    color: #bdc3c7 !important;
+  }
+  
+  .tweet-meta i {
+    color: #1da1f2;
+  }
+  
+  .bg-light {
+    background-color: #253341 !important;
+  }
+  
+  .twitter-card {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    border: 1px solid #34495e;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  
+  .category-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .category-sports {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .category-politics {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  .category-entertainment {
+    background-color: #9b59b6;
+    color: white;
+  }
+  
+  .stats-card {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border: 1px solid #38444d;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #38444d;
+  }
+  
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 bg-dark vh-100 position-fixed">
+      <div class="p-4">
+        <div class="logo mb-4"><i class="fab fa-twitter"></i> Twikk</div>
+        <nav class="nav flex-column">
+          <a class="nav-link text-white mb-3" href="/dashboard">
+            <i class="fas fa-home me-3"></i>Home
+          </a>
+          
+          <a class="nav-link text-white mb-3" href="/notifications">
+            <i class="fas fa-bell me-3"></i>Notifications
+          </a>
+
+          <a class="nav-link text-white mb-3" href="/messages">
+            <i class="fas fa-envelope me-3"></i>Messages
+          </a>
+
+          <a class="nav-link text-white mb-3 active" href="/communities">
+            <i class="fas fa-users me-3"></i>Communities
+          </a>
+
+          <a class="nav-link text-white mb-3" href="/gpt-chat">
+            <i class="fas fa-robot me-3"></i>Grok
+          </a>
+
+          <a class="nav-link text-white mb-3" href="#" onclick="showUserInfo()">
+            <i class="fas fa-user me-3"></i>Profile
+          </a>
+          <a class="nav-link text-white mb-3" href="/logout">
+            <i class="fas fa-sign-out-alt me-3"></i>Sign out
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 offset-md-3">
+      <div class="p-4">
+        <!-- Header -->
+        <div class="twitter-card p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h2 class="text-white mb-2">
+                <i class="fas fa-users me-2"></i><%= category.charAt(0).toUpperCase() + category.slice(1) %> Community
+              </h2>
+              <span class="category-badge category-<%= category %>"><%= category %></span>
+            </div>
+            <a href="/communities" class="btn btn-outline-twitter">
+              <i class="fas fa-arrow-left me-2"></i>Back to Communities
+            </a>
+          </div>
+          <p class="text-muted mb-0 mt-2">Total tweets: <%= totalTweets %></p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-card">
+          <h4 class="text-white mb-3">
+            <i class="fas fa-chart-bar me-2"></i>Community Statistics
+          </h4>
+          <% if (stats && stats.length > 0) { %>
+            <% stats.forEach(stat => { %>
+              <div class="stat-item">
+                <div>
+                  <strong class="text-white"><%= stat._id %></strong>
+                  <small class="text-muted d-block"><%= stat.count %> tweets</small>
+                </div>
+                <div class="text-muted">
+                  <i class="fas fa-heart me-1"></i><%= stat.totalLikes %> total likes
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p class="text-muted">No statistics available</p>
+          <% } %>
+        </div>
+
+        <!-- Tweets -->
+        <div class="twitter-card p-4">
+          <h4 class="text-twitter mb-3">
+            <i class="fas fa-stream me-2"></i>Community Tweets
+          </h4>
+          <div id="tweets-container">
+            <% if (tweets && tweets.length > 0) { %>
+              <% tweets.forEach(tweet => { %>
+                <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-circle text-twitter me-2"></i>
+                    <strong class="text-white"><%= tweet.authorName %></strong>
+                    <span class="text-muted ms-2">@<%= tweet.authorName.toLowerCase().replace(/\s+/g, '') %></span>
+                  </div>
+                  <p class="text-light mb-0"><%= tweet.content %></p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i><%= new Date(tweet.createdAt).toLocaleString() %>
+                  </small>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="text-center text-muted py-5">
+                <i class="fas fa-comments fa-3x mb-3"></i>
+                <p>No tweets in this community yet</p>
+                <p>Be the first to post!</p>
+              </div>
+            <% } %>
+          </div>
+          
+          <!-- 加载更多按钮 -->
+          <div id="load-more-container" class="text-center mt-4" style="display: none;">
+            <button id="load-more-btn" class="btn btn-outline-twitter">
+              <i class="fas fa-spinner fa-spin me-2" id="loading-spinner" style="display: none;"></i>
+              <span id="load-more-text">Load More Tweets</span>
+            </button>
+          </div>
+          
+          <!-- 没有更多推文提示 -->
+          <div id="no-more-tweets" class="text-center text-muted mt-4" style="display: none;">
+            <i class="fas fa-check-circle me-2"></i>
+            No more tweets
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showUserInfo() {
+    alert('User info:\nName: <%= user.name %>\nUsername: @<%= user.username %>\nEmail: <%= user.email %>');
+  }
+
+  // 无限滚动功能
+  let currentPage = <%= currentPage %>;
+  let isLoading = false;
+  let hasMoreTweets = <%= hasMore %>;
+
+  // 页面加载完成后初始化
+  document.addEventListener('DOMContentLoaded', function() {
+    // 如果有推文，显示加载更多按钮
+    if (document.querySelectorAll('.tweet-card').length > 0) {
+      document.getElementById('load-more-container').style.display = 'block';
+    }
+    
+    // 添加滚动监听器实现无限滚动
+    window.addEventListener('scroll', handleScroll);
+  });
+
+  // 滚动处理函数
+  function handleScroll() {
+    // 检查是否滚动到页面底部附近
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    // 当滚动到距离底部200px时自动加载更多
+    if (scrollTop + windowHeight >= documentHeight - 200) {
+      if (hasMoreTweets && !isLoading) {
+        loadMoreTweets();
+      }
+    }
+  }
+
+  // 加载更多推文
+  async function loadMoreTweets() {
+    if (isLoading || !hasMoreTweets) return;
+    
+    isLoading = true;
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const loadMoreText = document.getElementById('load-more-text');
+    
+    // 显示加载状态
+    loadingSpinner.style.display = 'inline-block';
+    loadMoreText.textContent = 'Loading...';
+    if (loadMoreBtn) loadMoreBtn.disabled = true;
+    
+    try {
+      // 添加0.8秒延迟，让分页效果更明显
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const response = await fetch(`/api/communities/<%= category %>/tweets?page=${currentPage + 1}&limit=20`);
+      const data = await response.json();
+      
+      if (data.tweets && data.tweets.length > 0) {
+        // 添加新推文到页面
+        const tweetsContainer = document.getElementById('tweets-container');
+        data.tweets.forEach(tweet => {
+          const tweetElement = document.createElement('div');
+          tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
+          tweetElement.innerHTML = `
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-user-circle text-twitter me-2"></i>
+              <strong class="text-white">${tweet.authorName}</strong>
+              <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
+            </div>
+            <p class="text-light mb-0">${tweet.content}</p>
+            <small class="text-muted">
+              <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
+            </small>
+          `;
+          tweetsContainer.appendChild(tweetElement);
+        });
+        
+        currentPage++;
+        hasMoreTweets = data.hasMore;
+        
+        if (!hasMoreTweets) {
+          document.getElementById('load-more-container').style.display = 'none';
+          document.getElementById('no-more-tweets').style.display = 'block';
+        }
+      } else {
+        hasMoreTweets = false;
+        document.getElementById('load-more-container').style.display = 'none';
+        document.getElementById('no-more-tweets').style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Failed to load tweets:', error);
+      loadMoreText.textContent = 'Load failed, click to retry';
+    } finally {
+      // 隐藏加载状态
+      loadingSpinner.style.display = 'none';
+      loadMoreText.textContent = 'Load More Tweets';
+      if (loadMoreBtn) loadMoreBtn.disabled = false;
+      isLoading = false;
+    }
+  }
+
+  // 绑定加载更多按钮点击事件
+  document.getElementById('load-more-btn').addEventListener('click', loadMoreTweets);
+</script>
+
+<%- include('../layouts/footer') %>

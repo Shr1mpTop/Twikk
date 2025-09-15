@@ -52,6 +52,24 @@ const createUsers = async () => {
                 username: "LM10",
                 email: "messi@football.com", 
                 password: "123456"
+            },
+            {
+                name: "Donald Trump",
+                username: "realDonaldTrump",
+                email: "trump@usa.com",
+                password: "123456"
+            },
+            {
+                name: "Ryan Gosling",
+                username: "RyanGosling",
+                email: "gosling@hollywood.com",
+                password: "123456"
+            },
+            {
+                name: "Community TV",
+                username: "CommunityTV",
+                email: "community@nbc.com",
+                password: "123456"
             }
         ];
         
@@ -100,29 +118,30 @@ const createUsers = async () => {
             }
         }
         
-        // 创建总共100条推文，随机分配给所有用户
-        console.log(`Creating 100 tweets randomly distributed among ${allUsers.length} users...`);
+        // 创建分类推文
+        console.log(`Creating categorized tweets...`);
         
+        // 1. 创建100条随机体育推文（原有用户）
+        const sportsUsers = allUsers.filter(user => 
+            ['lbj23', 'mj23', 'cr7', 'lm10'].includes(user.username)
+        );
+        
+        console.log(`Creating 100 sports tweets...`);
         for (let i = 0; i < 100; i++) {
             try {
-                // 随机选择一个用户
-                const randomUser = allUsers[Math.floor(Math.random() * allUsers.length)];
-                
-                // 随机选择推文内容
+                const randomUser = sportsUsers[Math.floor(Math.random() * sportsUsers.length)];
                 const randomTweet = tweetTemplates[Math.floor(Math.random() * tweetTemplates.length)];
                 
-                // 生成9月9日到9月10日之间的随机时间
                 const startDate = new Date('2024-09-09T00:00:00Z');
                 const endDate = new Date('2024-09-10T23:59:59Z');
                 const randomTime = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
                 
-                // 创建推文
                 const tweet = new Tweet({
                     content: randomTweet,
                     authorId: randomUser._id,
                     authorName: randomUser.name,
-                    parentTweetId: null,
-                    likesCount: Math.floor(Math.random() * 50), // 随机点赞数0-49
+                    category: 'sports',
+                    likesCount: Math.floor(Math.random() * 50),
                     createdAt: randomTime,
                     updatedAt: randomTime
                 });
@@ -130,11 +149,98 @@ const createUsers = async () => {
                 await tweet.save();
                 
                 if ((i + 1) % 20 === 0) {
-                    console.log(`   Created ${i + 1}/100 tweets...`);
+                    console.log(`   Created ${i + 1}/100 sports tweets...`);
                 }
-                
             } catch (error) {
-                console.error(`Error creating tweet ${i + 1}:`, error.message);
+                console.error(`Error creating sports tweet ${i + 1}:`, error.message);
+            }
+        }
+        
+        // 2. 创建Trump的政治推文
+        const trumpUser = allUsers.find(user => user.username === 'realdonaldtrump');
+        if (trumpUser) {
+            console.log(`Creating Trump's political tweets...`);
+            const trumpTweets = ['MAGA！！！！', 'Y.M.C.A!!!'];
+            
+            for (let i = 0; i < 20; i++) {
+                try {
+                    const randomTweet = trumpTweets[Math.floor(Math.random() * trumpTweets.length)];
+                    const startDate = new Date('2024-09-09T00:00:00Z');
+                    const endDate = new Date('2024-09-10T23:59:59Z');
+                    const randomTime = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
+                    
+                    const tweet = new Tweet({
+                        content: randomTweet,
+                        authorId: trumpUser._id,
+                        authorName: trumpUser.name,
+                        category: 'politics',
+                        likesCount: Math.floor(Math.random() * 100),
+                        createdAt: randomTime,
+                        updatedAt: randomTime
+                    });
+                    
+                    await tweet.save();
+                } catch (error) {
+                    console.error(`Error creating Trump tweet ${i + 1}:`, error.message);
+                }
+            }
+        }
+        
+        // 3. 创建Ryan Gosling的娱乐推文
+        const ryanUser = allUsers.find(user => user.username === 'ryangosling');
+        if (ryanUser) {
+            console.log(`Creating Ryan Gosling's entertainment tweets...`);
+            const ryanTweets = ['I drive', '我，驱动'];
+            
+            for (let i = 0; i < 15; i++) {
+                try {
+                    const randomTweet = ryanTweets[Math.floor(Math.random() * ryanTweets.length)];
+                    const startDate = new Date('2024-09-09T00:00:00Z');
+                    const endDate = new Date('2024-09-10T23:59:59Z');
+                    const randomTime = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
+                    
+                    const tweet = new Tweet({
+                        content: randomTweet,
+                        authorId: ryanUser._id,
+                        authorName: ryanUser.name,
+                        category: 'entertainment',
+                        likesCount: Math.floor(Math.random() * 80),
+                        createdAt: randomTime,
+                        updatedAt: randomTime
+                    });
+                    
+                    await tweet.save();
+                } catch (error) {
+                    console.error(`Error creating Ryan tweet ${i + 1}:`, error.message);
+                }
+            }
+        }
+        
+        // 4. 创建Community TV的娱乐推文
+        const communityUser = allUsers.find(user => user.username === 'communitytv');
+        if (communityUser) {
+            console.log(`Creating Community TV's entertainment tweets...`);
+            
+            for (let i = 0; i < 10; i++) {
+                try {
+                    const startDate = new Date('2024-09-09T00:00:00Z');
+                    const endDate = new Date('2024-09-10T23:59:59Z');
+                    const randomTime = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
+                    
+                    const tweet = new Tweet({
+                        content: 'SIX SEASONS AND A MOVIE',
+                        authorId: communityUser._id,
+                        authorName: communityUser.name,
+                        category: 'entertainment',
+                        likesCount: Math.floor(Math.random() * 200),
+                        createdAt: randomTime,
+                        updatedAt: randomTime
+                    });
+                    
+                    await tweet.save();
+                } catch (error) {
+                    console.error(`Error creating Community tweet ${i + 1}:`, error.message);
+                }
             }
         }
         
@@ -159,8 +265,19 @@ const createUsers = async () => {
             { $sort: { count: -1 } }
         ]);
         
-        console.log('\nTweet statistics:');
+        console.log('\nTweet statistics by author:');
         tweetStats.forEach(stat => {
+            console.log(`   - ${stat._id}: ${stat.count} tweets`);
+        });
+        
+        // 显示分类统计
+        const categoryStats = await Tweet.aggregate([
+            { $group: { _id: '$category', count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]);
+        
+        console.log('\nTweet statistics by category:');
+        categoryStats.forEach(stat => {
             console.log(`   - ${stat._id}: ${stat.count} tweets`);
         });
         
