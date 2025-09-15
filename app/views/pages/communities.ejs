@@ -124,39 +124,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar -->
-    <div class="col-md-3 bg-dark vh-100 position-fixed">
-      <div class="p-4">
-        <div class="logo mb-4"><i class="fab fa-twitter"></i> Twikk</div>
-        <nav class="nav flex-column">
-          <a class="nav-link text-white mb-3" href="/dashboard">
-            <i class="fas fa-home me-3"></i>Home
-          </a>
-          
-          <a class="nav-link text-white mb-3" href="/notifications">
-            <i class="fas fa-bell me-3"></i>Notifications
-          </a>
-
-          <a class="nav-link text-white mb-3" href="/messages">
-            <i class="fas fa-envelope me-3"></i>Messages
-          </a>
-
-          <a class="nav-link text-white mb-3 active" href="/communities">
-            <i class="fas fa-users me-3"></i>Communities
-          </a>
-
-          <a class="nav-link text-white mb-3" href="/gpt-chat">
-            <i class="fas fa-robot me-3"></i>Grok
-          </a>
-
-          <a class="nav-link text-white mb-3" href="#" onclick="showUserInfo()">
-            <i class="fas fa-user me-3"></i>Profile
-          </a>
-          <a class="nav-link text-white mb-3" href="/logout">
-            <i class="fas fa-sign-out-alt me-3"></i>Sign out
-          </a>
-        </nav>
-      </div>
-    </div>
+    <%- include('../layouts/sidebar', { user: user }) %>
 
     <!-- Main Content -->
     <div class="col-md-9 offset-md-3">

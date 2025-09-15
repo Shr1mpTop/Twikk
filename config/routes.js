@@ -36,15 +36,7 @@ module.exports = function (app) {
   // API: 搜索推文
   app.get('/api/search', tweets.search);
 
-  // chat功能
-  app.get('/messages', (req, res) => {
-    if (!req.session.user) {
-      return res.redirect('/login');
-    }
-
-    res.render('pages/message.ejs', { user: req.session.user, pageStyles: '/css/message.css', pageScripts: '/js/message.js' });
-  });
-
+  
   // Communities页面
   app.get('/communities', communities.getCommunities);
   

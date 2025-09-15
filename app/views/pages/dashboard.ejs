@@ -1,319 +1,342 @@
 <%- include('../layouts/header') %>
 
-<style>
-  .tweet-card {
-    background-color: #253341 !important;
-    border: 1px solid #38444d !important;
-    border-radius: 12px !important;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-  }
-  
-  .tweet-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4) !important;
-    border-color: #1da1f2 !important;
-    background-color: #2a3a4a !important;
-  }
-  
-  .tweet-content p {
-    font-size: 16px;
-    line-height: 1.5;
-    color: #ecf0f1;
-  }
-  
-  .tweet-meta {
-    border-top: 1px solid #38444d;
-    padding-top: 8px;
-    margin-top: 8px;
-  }
-  
-  .tweet-meta small {
-    font-size: 12px;
-    color: #bdc3c7 !important;
-  }
-  
-  .tweet-meta i {
-    color: #1da1f2;
-  }
-  
-  .bg-light {
-    background-color: #253341 !important;
-  }
-  
-  .twitter-card {
-    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-    border: 1px solid #34495e;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  }
-  
-  .twitter-card h3, .twitter-card h4 {
-    color: #ecf0f1 !important;
-  }
-  
-  .twitter-card p {
-    color: #bdc3c7 !important;
-  }
-  
-  .twitter-card .text-muted {
-    color: #95a5a6 !important;
-  }
-  
-  body {
-    background-color: #2c3e50;
-  }
-  
-  /* 搜索框样式 */
-  .search-container {
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  
-  .search-box .input-group-text {
-    background-color: #253341 !important;
-    border-color: #38444d !important;
-    color: #bdc3c7 !important;
-  }
-  
-  .search-box .form-control {
-    background-color: #253341 !important;
-    border-color: #38444d !important;
-    color: #ffffff !important;
-    border-left: none !important;
-  }
-  
-  .search-box .form-control:focus {
-    background-color: #253341 !important;
-    border-color: #1da1f2 !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 0 0.2rem rgba(29, 161, 242, 0.25) !important;
-  }
-  
-  .search-box .btn {
-    border-left: none !important;
-  }
-  
-  .search-box .input-group .form-control:not(:first-child) {
-    border-left: 1px solid #38444d !important;
-  }
-</style>
+  <style>
+    .tweet-card {
+      background-color: #253341 !important;
+      border: 1px solid #38444d !important;
+      border-radius: 12px !important;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    }
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <div class="col-md-3 bg-dark vh-100 position-fixed">
-      <div class="p-4">
-                    <div class="logo mb-4"><i class="fab fa-twitter"></i> Twikk</div>
-                    <nav class="nav flex-column">
-                        <a class="nav-link text-white mb-3" href="/dashboard">
-                            <i class="fas fa-home me-3"></i>Home
-                        </a>
-                        <a class="nav-link text-white mb-3" href="/notifications">
-                          <i class="fas fa-bell me-3"></i>Notifications
-                        </a>
-                        <a class="nav-link text-white mb-3" href="/messages">
-                            <i class="fas fa-envelope me-3"></i>Messages
-                        </a>
+    .tweet-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4) !important;
+      border-color: #1da1f2 !important;
+      background-color: #2a3a4a !important;
+    }
 
-                        <a class="nav-link text-white mb-3" href="/communities">
-                            <i class="fas fa-users me-3"></i>Communities
-                        </a>
+    .tweet-content p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #ecf0f1;
+    }
 
-                        <a class="nav-link text-white mb-3" href="/gpt-chat">
-                            <i class="fas fa-robot me-3"></i>Grok
-                        </a>
+    .tweet-meta {
+      border-top: 1px solid #38444d;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
 
-                        <a class="nav-link text-white mb-3" href="#" onclick="showUserInfo()">
-                            <i class="fas fa-user me-3"></i>Profile
-                        </a>
-                        <a class="nav-link text-white mb-3" href="/logout">
-                            <i class="fas fa-sign-out-alt me-3"></i>Sign out
-                        </a>
-                    </nav>
-                </div>
-    </div>
+    .tweet-meta small {
+      font-size: 12px;
+      color: #bdc3c7 !important;
+    }
 
-    <!-- Main -->
-    <div class="col-md-9 offset-md-3">
-      <!-- 固定搜索框 -->
-      <div class="search-container fixed-top" style="top: 0; left: 25%; right: 0; z-index: 1000; background-color: #15202b; padding: 15px; border-bottom: 1px solid #38444d;">
-        <div class="search-box">
-          <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary">
-              <i class="fas fa-search text-muted"></i>
-            </span>
-            <input type="text" class="form-control" placeholder="Search tweets, users, or topics..." id="search-input">
-            <button class="btn btn-twitter" type="button" id="search-btn">
-              <i class="fas fa-search me-1"></i>Search
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 内容区域，添加顶部间距避免被搜索框遮挡 -->
-      <div class="p-4" style="margin-top: 80px;">
-        <!-- Welcome -->
-        <div class="twitter-card p-4 mb-4">
-          <h3 class="text-twitter mb-3">
-            <i class="fas fa-home me-2"></i>Welcome to Twikk, <%= user.name %>!
-          </h3>
-          <p class="text-muted">This is your dashboard. Post tweets, view the timeline, and manage your account.</p>
-        </div>
+    .tweet-meta i {
+      color: #1da1f2;
+    }
 
-        <!-- Profile -->
-        <div class="twitter-card p-4 mb-4">
-          <h4 class="text-twitter mb-3">
-            <i class="fas fa-user-circle me-2"></i>Profile
-          </h4>
-          <div class="row">
-            <div class="col-md-6">
-              <p><strong>Name:</strong> <%= user.name %></p>
-              <p><strong>Username:</strong> @<%= user.username %></p>
-            </div>
-            <div class="col-md-6">
-              <p><strong>Email:</strong> <%= user.email %></p>
-              <p><strong>User ID:</strong> <%= user.id %></p>
-            </div>
-          </div>
-        </div>
+    .bg-light {
+      background-color: #253341 !important;
+    }
 
-        <!-- Compose -->
-        <div class="twitter-card p-4 mb-4">
-          <h4 class="text-twitter mb-3">
-            <i class="fas fa-feather-alt me-2"></i>Compose new Tweet
-          </h4>
-          <form action="/tweet" method="POST">
-            <div class="mb-3">
-              <textarea class="form-control" name="content" rows="3" maxlength="280" placeholder="What's happening?"></textarea>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted">Up to 280 characters</span>
-              <button type="submit" class="btn btn-twitter">
-                <i class="fas fa-paper-plane me-2"></i>Tweet
-              </button>
-            </div>
-          </form>
-        </div>
+    .twitter-card {
+      background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+      border: 1px solid #34495e;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
 
-        <!-- Timeline -->
-        <div class="twitter-card p-4">
-          <h4 class="text-twitter mb-3">
-            <i class="fas fa-stream me-2"></i>Timeline
-          </h4>
-          <div id="tweets-container">
-            <% if (tweets && tweets.length > 0) { %>
-              <% tweets.forEach(t => { %>
-                <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm">
-                  <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-user-circle text-twitter me-2"></i>
-                    <strong class="text-white"><%= t.authorName %></strong>
-                    <span class="text-muted ms-2">@<%= t.authorName.toLowerCase().replace(/\s+/g, '') %></span>
-                  </div>
-                  <p class="text-light mb-0"><%= t.content %></p>
-                  <small class="text-muted">
-                    <i class="fas fa-clock me-1"></i><%= new Date(t.createdAt).toLocaleString() %>
-                  </small>
-                </div>
-              <% }) %>
-            <% } else { %>
-              <div class="text-center text-muted py-5">
-                <i class="fas fa-comments fa-3x mb-3"></i>
-                <p>No tweets yet</p>
-                <p>Start by posting your first one!</p>
+    .twitter-card h3,
+    .twitter-card h4 {
+      color: #ecf0f1 !important;
+    }
+
+    .twitter-card p {
+      color: #bdc3c7 !important;
+    }
+
+    .twitter-card .text-muted {
+      color: #95a5a6 !important;
+    }
+
+    body {
+      background-color: #2c3e50;
+    }
+
+    /* 搜索框样式 */
+    .search-container {
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-box .input-group-text {
+      background-color: #253341 !important;
+      border-color: #38444d !important;
+      color: #bdc3c7 !important;
+    }
+
+    .search-box .form-control {
+      background-color: #253341 !important;
+      border-color: #38444d !important;
+      color: #ffffff !important;
+      border-left: none !important;
+    }
+
+    .search-box .form-control:focus {
+      background-color: #253341 !important;
+      border-color: #1da1f2 !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 0 0.2rem rgba(29, 161, 242, 0.25) !important;
+    }
+
+    .search-box .btn {
+      border-left: none !important;
+    }
+
+    .search-box .input-group .form-control:not(:first-child) {
+      border-left: 1px solid #38444d !important;
+    }
+  </style>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <%- include('../layouts/sidebar', { user: user }) %>
+        <!-- Main -->
+        <div class="col-md-9 offset-md-3">
+          <!-- 固定搜索框 -->
+          <div class="search-container fixed-top"
+            style="top: 0; left: 25%; right: 0; z-index: 1000; background-color: #15202b; padding: 15px; border-bottom: 1px solid #38444d;">
+            <div class="search-box">
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary">
+                  <i class="fas fa-search text-muted"></i>
+                </span>
+                <input type="text" class="form-control" placeholder="Search tweets, users, or topics..."
+                  id="search-input">
+                <button class="btn btn-twitter" type="button" id="search-btn">
+                  <i class="fas fa-search me-1"></i>Search
+                </button>
               </div>
-            <% } %>
+            </div>
           </div>
-          
-          <!-- 加载更多按钮 -->
-          <div id="load-more-container" class="text-center mt-4" style="display: none;">
-            <button id="load-more-btn" class="btn btn-outline-twitter">
-              <i class="fas fa-spinner fa-spin me-2" id="loading-spinner" style="display: none;"></i>
-              <span id="load-more-text">Load More Tweets</span>
-            </button>
-          </div>
-          
-          
-          <!-- 没有更多推文提示 -->
-          <div id="no-more-tweets" class="text-center text-muted mt-4" style="display: none;">
-            <i class="fas fa-check-circle me-2"></i>
-            No more tweets
+
+          <!-- 内容区域，添加顶部间距避免被搜索框遮挡 -->
+          <div class="p-4" style="margin-top: 80px;">
+            <!-- Welcome -->
+            <div class="twitter-card p-4 mb-4">
+              <h3 class="text-twitter mb-3">
+                <i class="fas fa-home me-2"></i>Welcome to Twikk, <%= user.name %>!
+              </h3>
+              <p class="text-muted">This is your dashboard. Post tweets, view the timeline, and manage your account.</p>
+            </div>
+
+            <!-- Profile -->
+            <div class="twitter-card p-4 mb-4">
+              <h4 class="text-twitter mb-3">
+                <i class="fas fa-user-circle me-2"></i>Profile
+              </h4>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Name:</strong>
+                    <%= user.name %>
+                  </p>
+                  <p><strong>Username:</strong> @<%= user.username %>
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Email:</strong>
+                    <%= user.email %>
+                  </p>
+                  <p><strong>User ID:</strong>
+                    <%= user.id %>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Compose -->
+            <div class="twitter-card p-4 mb-4">
+              <h4 class="text-twitter mb-3">
+                <i class="fas fa-feather-alt me-2"></i>Compose new Tweet
+              </h4>
+              <form action="/tweet" method="POST">
+                <div class="mb-3">
+                  <textarea class="form-control" name="content" rows="3" maxlength="280"
+                    placeholder="What's happening?"></textarea>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-muted">Up to 280 characters</span>
+                  <button type="submit" class="btn btn-twitter">
+                    <i class="fas fa-paper-plane me-2"></i>Tweet
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Timeline -->
+            <div class="twitter-card p-4">
+              <h4 class="text-twitter mb-3">
+                <i class="fas fa-stream me-2"></i>Timeline
+              </h4>
+              <div id="tweets-container">
+                <% if (tweets && tweets.length> 0) { %>
+                  <% tweets.forEach(t=> { %>
+                    <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="<%= t._id %>">
+                      <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-user-circle text-twitter me-2"></i>
+                        <strong class="text-white">
+                          <%= t.authorName %>
+                        </strong>
+                        <span class="text-muted ms-2">@<%= t.authorName.toLowerCase().replace(/\s+/g, '' ) %></span>
+                      </div>
+                      <p class="text-light mb-0">
+                        <%= t.content %>
+                      </p>
+                      <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-muted">
+                          <i class="fas fa-clock me-1"></i>
+                          <%= new Date(t.createdAt).toLocaleString() %>
+                        </small>
+                        <div>
+                          <button class="btn btn-sm btn-like <%= t.isLikedByCurrentUser ? 'liked' : '' %>"
+                            data-tweet-id="<%= t._id %>">
+                            <i class="fas fa-heart"></i>
+                            <span class="likes-count">
+                              <%= t.likesCount || 0 %>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 评论区 -->
+                      <div class="comments-section mt-3">
+                        <div class="comments-list">
+                          <% if (t.comments && t.comments.length> 0) { %>
+                            <% t.comments.slice(-3).forEach(c=> { %>
+                              <div class="comment mb-2">
+                                <strong class="text-white">
+                                  <%= c.authorName %>
+                                </strong>
+                                <span class="text-muted ms-2">
+                                  <%= new Date(c.createdAt).toLocaleString() %>
+                                </span>
+                                <p class="text-light mb-1">
+                                  <%= c.content %>
+                                </p>
+                              </div>
+                              <% }) %>
+                                <% } %>
+                        </div>
+
+                        <form class="comment-form d-flex mt-2" data-tweet-id="<%= t._id %>">
+                          <input type="text" name="content" class="form-control form-control-sm me-2"
+                            placeholder="Write a comment..." required maxlength="1000">
+                          <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
+                        </form>
+                      </div>
+                    </div>
+                    <% }) %>
+                      <% } else { %>
+                        <div class="text-center text-muted py-5">
+                          <i class="fas fa-comments fa-3x mb-3"></i>
+                          <p>No tweets yet</p>
+                          <p>Start by posting your first one!</p>
+                        </div>
+                        <% } %>
+              </div>
+
+              <!-- 加载更多按钮 -->
+              <div id="load-more-container" class="text-center mt-4" style="display: none;">
+                <button id="load-more-btn" class="btn btn-outline-twitter">
+                  <i class="fas fa-spinner fa-spin me-2" id="loading-spinner" style="display: none;"></i>
+                  <span id="load-more-text">Load More Tweets</span>
+                </button>
+              </div>
+
+
+              <!-- 没有更多推文提示 -->
+              <div id="no-more-tweets" class="text-center text-muted mt-4" style="display: none;">
+                <i class="fas fa-check-circle me-2"></i>
+                No more tweets
+              </div>
+            </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
-</div>
 
-<script>
-  function showUserInfo() {
-    alert('User info:\nName: <%= user.name %>\nUsername: @<%= user.username %>\nEmail: <%= user.email %>');
-  }
-
-  // 无限滚动功能
-  let currentPage = 1;
-  let isLoading = false;
-  let hasMoreTweets = true;
-
-  // 页面加载完成后初始化
-  document.addEventListener('DOMContentLoaded', function() {
-    // 如果有推文，显示加载更多按钮
-    if (document.querySelectorAll('.tweet-card').length > 0) {
-      document.getElementById('load-more-container').style.display = 'block';
+  <script>
+    function showUserInfo() {
+      alert('User info:\nName: <%= user.name %>\nUsername: @<%= user.username %>\nEmail: <%= user.email %>');
     }
-    
-    // 延迟滚动到顶部，确保页面完全渲染
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 500);
-    
-    // 添加滚动监听器实现无限滚动
-    window.addEventListener('scroll', handleScroll);
-  });
 
-  // 滚动处理函数
-  function handleScroll() {
-    // 检查是否滚动到页面底部附近
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    
-    // 当滚动到距离底部200px时自动加载更多
-    if (scrollTop + windowHeight >= documentHeight - 200) {
-      if (hasMoreTweets && !isLoading) {
-        loadMoreTweets();
+    // 无限滚动功能
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMoreTweets = true;
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function () {
+      // 如果有推文，显示加载更多按钮
+      if (document.querySelectorAll('.tweet-card').length > 0) {
+        document.getElementById('load-more-container').style.display = 'block';
+      }
+
+      // 延迟滚动到顶部，确保页面完全渲染
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 500);
+
+      // 添加滚动监听器实现无限滚动
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    // 滚动处理函数
+    function handleScroll() {
+      // 检查是否滚动到页面底部附近
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // 当滚动到距离底部200px时自动加载更多
+      if (scrollTop + windowHeight >= documentHeight - 200) {
+        if (hasMoreTweets && !isLoading) {
+          loadMoreTweets();
+        }
       }
     }
-  }
 
-  // 加载更多推文
-  async function loadMoreTweets() {
-    if (isLoading || !hasMoreTweets) return;
-    
-    isLoading = true;
-    const loadMoreBtn = document.getElementById('load-more-btn');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const loadMoreText = document.getElementById('load-more-text');
-    
-    // 显示加载状态
-    loadingSpinner.style.display = 'inline-block';
-    loadMoreText.textContent = 'Loading...';
-    if (loadMoreBtn) loadMoreBtn.disabled = true;
-    
-    try {
-      // 添加0.1秒延迟，让分页效果更明显
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      const response = await fetch(`/api/tweets?page=${currentPage + 1}&limit=20`);
-      const data = await response.json();
-      
-      if (data.tweets && data.tweets.length > 0) {
-        // 添加新推文到页面
-        const tweetsContainer = document.getElementById('tweets-container');
-        data.tweets.forEach(tweet => {
-          const tweetElement = document.createElement('div');
-          tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
-          tweetElement.innerHTML = `
+    // 加载更多推文
+    async function loadMoreTweets() {
+      if (isLoading || !hasMoreTweets) return;
+
+      isLoading = true;
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const loadMoreText = document.getElementById('load-more-text');
+
+      // 显示加载状态
+      loadingSpinner.style.display = 'inline-block';
+      loadMoreText.textContent = 'Loading...';
+      if (loadMoreBtn) loadMoreBtn.disabled = true;
+
+      try {
+        // 添加0.1秒延迟，让分页效果更明显
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        const response = await fetch(`/api/tweets?page=${currentPage + 1}&limit=20`);
+        const data = await response.json();
+
+        if (data.tweets && data.tweets.length > 0) {
+          // 添加新推文到页面
+          const tweetsContainer = document.getElementById('tweets-container');
+          data.tweets.forEach(tweet => {
+            const tweetElement = document.createElement('div');
+            tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
+            tweetElement.innerHTML = `
             <div class="d-flex align-items-center mb-2">
               <i class="fas fa-user-circle text-twitter me-2"></i>
               <strong class="text-white">${tweet.authorName}</strong>
@@ -324,115 +347,115 @@
               <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
             </small>
           `;
-          tweetsContainer.appendChild(tweetElement);
-        });
-        
-        currentPage++;
-        hasMoreTweets = data.hasMore;
-        
-        if (!hasMoreTweets) {
+            tweetsContainer.appendChild(tweetElement);
+          });
+
+          currentPage++;
+          hasMoreTweets = data.hasMore;
+
+          if (!hasMoreTweets) {
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('no-more-tweets').style.display = 'block';
+          }
+        } else {
+          hasMoreTweets = false;
           document.getElementById('load-more-container').style.display = 'none';
           document.getElementById('no-more-tweets').style.display = 'block';
         }
-      } else {
-        hasMoreTweets = false;
-        document.getElementById('load-more-container').style.display = 'none';
-        document.getElementById('no-more-tweets').style.display = 'block';
+      } catch (error) {
+        console.error('Failed to load tweets:', error);
+        loadMoreText.textContent = 'Load failed, click to retry';
+      } finally {
+        // 隐藏加载状态
+        loadingSpinner.style.display = 'none';
+        loadMoreText.textContent = 'Load More Tweets';
+        if (loadMoreBtn) loadMoreBtn.disabled = false;
+        isLoading = false;
       }
-    } catch (error) {
-      console.error('Failed to load tweets:', error);
-      loadMoreText.textContent = 'Load failed, click to retry';
-    } finally {
-      // 隐藏加载状态
-      loadingSpinner.style.display = 'none';
-      loadMoreText.textContent = 'Load More Tweets';
-      if (loadMoreBtn) loadMoreBtn.disabled = false;
-      isLoading = false;
     }
-  }
 
-  // 绑定加载更多按钮点击事件
-  document.getElementById('load-more-btn').addEventListener('click', loadMoreTweets);
+    // 绑定加载更多按钮点击事件
+    document.getElementById('load-more-btn').addEventListener('click', loadMoreTweets);
 
 
-  // 搜索功能
-  async function performSearch() {
-    const searchTerm = document.getElementById('search-input').value.trim();
-    if (!searchTerm) {
-      alert('Please enter a search keyword');
-      return;
-    }
-    
-    try {
-      // 显示搜索状态
-      const searchBtn = document.getElementById('search-btn');
-      const originalText = searchBtn.innerHTML;
-      searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Searching...';
-      searchBtn.disabled = true;
-      
-      // 发送搜索请求
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`);
-      const data = await response.json();
-      
-      if (data.error) {
-        alert('Search failed: ' + data.error);
+    // 搜索功能
+    async function performSearch() {
+      const searchTerm = document.getElementById('search-input').value.trim();
+      if (!searchTerm) {
+        alert('Please enter a search keyword');
         return;
       }
-      
-      // 显示搜索结果
-      displaySearchResults(data.tweets, data.query);
-      
-    } catch (error) {
-      console.error('Search error:', error);
-      alert('Search failed. Please try again.');
-    } finally {
-      // 恢复按钮状态
-      const searchBtn = document.getElementById('search-btn');
-      searchBtn.innerHTML = '<i class="fas fa-search me-1"></i>Search';
-      searchBtn.disabled = false;
+
+      try {
+        // 显示搜索状态
+        const searchBtn = document.getElementById('search-btn');
+        const originalText = searchBtn.innerHTML;
+        searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Searching...';
+        searchBtn.disabled = true;
+
+        // 发送搜索请求
+        const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`);
+        const data = await response.json();
+
+        if (data.error) {
+          alert('Search failed: ' + data.error);
+          return;
+        }
+
+        // 显示搜索结果
+        displaySearchResults(data.tweets, data.query);
+
+      } catch (error) {
+        console.error('Search error:', error);
+        alert('Search failed. Please try again.');
+      } finally {
+        // 恢复按钮状态
+        const searchBtn = document.getElementById('search-btn');
+        searchBtn.innerHTML = '<i class="fas fa-search me-1"></i>Search';
+        searchBtn.disabled = false;
+      }
     }
-  }
-  
-  // 显示搜索结果
-  function displaySearchResults(tweets, query) {
-    const tweetsContainer = document.getElementById('tweets-container');
-    const loadMoreContainer = document.getElementById('load-more-container');
-    const noMoreTweets = document.getElementById('no-more-tweets');
-    
-    // 隐藏Welcome、Profile和Compose部分
-    const welcomeSection = document.querySelector('.twitter-card:first-of-type');
-    const profileSection = document.querySelector('.twitter-card:nth-of-type(2)');
-    const composeSection = document.querySelector('.twitter-card:nth-of-type(3)');
-    
-    if (welcomeSection) welcomeSection.style.display = 'none';
-    if (profileSection) profileSection.style.display = 'none';
-    if (composeSection) composeSection.style.display = 'none';
-    
-    // 隐藏加载更多按钮
-    loadMoreContainer.style.display = 'none';
-    noMoreTweets.style.display = 'none';
-    
-    if (tweets.length === 0) {
-      tweetsContainer.innerHTML = `
+
+    // 显示搜索结果
+    function displaySearchResults(tweets, query) {
+      const tweetsContainer = document.getElementById('tweets-container');
+      const loadMoreContainer = document.getElementById('load-more-container');
+      const noMoreTweets = document.getElementById('no-more-tweets');
+
+      // 隐藏Welcome、Profile和Compose部分
+      const welcomeSection = document.querySelector('.twitter-card:first-of-type');
+      const profileSection = document.querySelector('.twitter-card:nth-of-type(2)');
+      const composeSection = document.querySelector('.twitter-card:nth-of-type(3)');
+
+      if (welcomeSection) welcomeSection.style.display = 'none';
+      if (profileSection) profileSection.style.display = 'none';
+      if (composeSection) composeSection.style.display = 'none';
+
+      // 隐藏加载更多按钮
+      loadMoreContainer.style.display = 'none';
+      noMoreTweets.style.display = 'none';
+
+      if (tweets.length === 0) {
+        tweetsContainer.innerHTML = `
         <div class="text-center py-5" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: 1px solid #38444d; border-radius: 12px;">
           <i class="fas fa-search fa-3x mb-3 text-light"></i>
           <p class="text-light">No tweets found for "${query}"</p>
           <p class="text-muted">Try different keywords</p>
         </div>
       `;
-    } else {
-      // 显示搜索结果
-      tweetsContainer.innerHTML = `
+      } else {
+        // 显示搜索结果
+        tweetsContainer.innerHTML = `
         <div class="mb-3 p-3 rounded" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: 1px solid #38444d;">
           <h5 class="text-white"><i class="fas fa-search me-2"></i>Search Results for "${query}"</h5>
           <p class="mb-0 text-light">Found ${tweets.length} tweet(s)</p>
         </div>
       `;
-      
-      tweets.forEach(tweet => {
-        const tweetElement = document.createElement('div');
-        tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
-        tweetElement.innerHTML = `
+
+        tweets.forEach(tweet => {
+          const tweetElement = document.createElement('div');
+          tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
+          tweetElement.innerHTML = `
           <div class="d-flex align-items-center mb-2">
             <i class="fas fa-user-circle text-twitter me-2"></i>
             <strong class="text-white">${tweet.authorName}</strong>
@@ -443,43 +466,116 @@
             <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
           </small>
         `;
-        tweetsContainer.appendChild(tweetElement);
-      });
-      
-      // 添加返回按钮
-      const returnButton = document.createElement('div');
-      returnButton.className = 'text-center mt-4';
-      returnButton.innerHTML = `
+          tweetsContainer.appendChild(tweetElement);
+        });
+
+        // 添加返回按钮
+        const returnButton = document.createElement('div');
+        returnButton.className = 'text-center mt-4';
+        returnButton.innerHTML = `
         <button class="btn btn-outline-twitter" onclick="returnToTimeline()">
           <i class="fas fa-arrow-left me-2"></i>Back to Timeline
         </button>
       `;
-      tweetsContainer.appendChild(returnButton);
+        tweetsContainer.appendChild(returnButton);
+      }
     }
-  }
-  
-  // 高亮搜索关键词
-  function highlightSearchTerm(text, query) {
-    const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
-  }
-  
-  // 返回时间线
-  function returnToTimeline() {
-    // 重新加载时间线
-    location.reload();
-  }
 
-  // 绑定搜索按钮点击事件
-  document.getElementById('search-btn').addEventListener('click', performSearch);
-
-  // 绑定回车键搜索
-  document.getElementById('search-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      performSearch();
+    // 高亮搜索关键词
+    function highlightSearchTerm(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
     }
-  });
 
-</script>
+    // 返回时间线
+    function returnToTimeline() {
+      // 重新加载时间线
+      location.reload();
+    }
 
-<%- include('../layouts/footer') %>
+    // 绑定搜索按钮点击事件
+    document.getElementById('search-btn').addEventListener('click', performSearch);
+
+    // 绑定回车键搜索
+    document.getElementById('search-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+
+    // 点赞按钮处理（事件代理）
+    document.addEventListener('click', async function (e) {
+      const likeBtn = e.target.closest('.btn-like');
+      if (!likeBtn) return;
+
+      const tweetId = likeBtn.getAttribute('data-tweet-id');
+      if (!tweetId) return;
+
+      try {
+        likeBtn.disabled = true;
+        const resp = await fetch(`/like/${tweetId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const data = await resp.json();
+        if (data && data.ok) {
+          const likesCountSpan = likeBtn.querySelector('.likes-count');
+          likesCountSpan.textContent = data.likesCount;
+          if (data.action === 'liked') {
+            likeBtn.classList.add('liked');
+          } else {
+            likeBtn.classList.remove('liked');
+          }
+        } else if (data && data.error) {
+          alert('Error: ' + data.error);
+        }
+      } catch (err) {
+        console.error('Like action failed', err);
+        alert('Like failed.');
+      } finally {
+        likeBtn.disabled = false;
+      }
+    });
+
+    // 评论表单提交（事件代理）
+    document.addEventListener('submit', async function (e) {
+      const form = e.target.closest('.comment-form');
+      if (!form) return;
+      e.preventDefault();
+
+      const tweetId = form.getAttribute('data-tweet-id');
+      const input = form.querySelector('input[name="content"]');
+      if (!input) return;
+      const content = input.value.trim();
+      if (!content) return;
+
+      try {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+
+        const resp = await fetch(`/comment/${tweetId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content })
+        });
+
+        const data = await resp.json();
+        if (data && data.ok && data.comment) {
+          const commentsList = form.parentElement.querySelector('.comments-list');
+          const div = document.createElement('div');
+          div.className = 'comment mb-2';
+          div.innerHTML = `<strong class="text-white">${data.comment.authorName}</strong> <span class="text-muted ms-2">${new Date(data.comment.createdAt).toLocaleString()}</span><p class="text-light mb-1">${data.comment.content}</p>`;
+          commentsList.appendChild(div);
+          input.value = '';
+        } else if (data && data.error) {
+          alert('Error: ' + data.error);
+        }
+      } catch (err) {
+        console.error('Comment failed', err);
+        alert('Comment failed.');
+      } finally {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+  </script>
+
+  <%- include('../layouts/footer') %>
