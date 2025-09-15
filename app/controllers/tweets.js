@@ -6,7 +6,14 @@ exports.timeline = async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   try {
     const tweets = await Tweet.find().sort({ createdAt: -1 }).limit(20).lean();
-    res.render('pages/dashboard', { user: req.session.user, tweets });
+
+    // 标记当前用户是否已点赞（便于视图渲染）
+    const userId = req.session.user.id;
+    const tweetsWithLiked = tweets.map(t => {
+      return Object.assign({}, t, { isLikedByCurrentUser: Array.isArray(t.likedBy) && t.likedBy.some(id => id.toString() === userId) });
+    });
+
+    res.render('pages/dashboard', { user: req.session.user, tweets: tweetsWithLiked });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -16,20 +23,20 @@ exports.timeline = async (req, res) => {
 // API: Get more tweets (for infinite scroll)
 exports.getMoreTweets = async (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Unauthorized' });
-  
+
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
-    
+
     const tweets = await Tweet.find()
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
-    
+
     const hasMore = tweets.length === limit;
-    
+
     res.json({
       tweets,
       hasMore,
@@ -64,21 +71,21 @@ exports.create = async (req, res) => {
 // Search tweets
 exports.search = async (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Unauthorized' });
-  
+
   try {
     const query = req.query.q;
     if (!query || query.trim().length === 0) {
       return res.json({ tweets: [], total: 0 });
     }
-    
+
     // 搜索推文内容
     const tweets = await Tweet.find({
       content: { $regex: query, $options: 'i' }
     })
-    .sort({ createdAt: -1 })
-    .limit(50)
-    .lean();
-    
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean();
+
     res.json({
       tweets,
       total: tweets.length,

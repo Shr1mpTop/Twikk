@@ -1,7 +1,30 @@
-// 修正后的完整 grok.js
+// grok.js - generative AI controller
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-// 1. 正确初始化（直接传密钥字符串）
-const ai = new GoogleGenerativeAI("AIzaSyCCzusPoa0YHo1-zZeFo73pUPQOx9OUgXw");
+
+// Read API key from environment for security
+const API_KEY = process.env.GOOGLE_API_KEY || process.env.GENERATIVE_API_KEY || '';
+if (!API_KEY) {
+    console.warn('Warning: GOOGLE_API_KEY is not set. AI calls will fail without a valid key.');
+}
+
+const ai = new GoogleGenerativeAI(API_KEY);
+
+// Helper: call model with timeout and optional retry
+async function callModelWithTimeout(model, payload, timeoutMs = 8000, retries = 1) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            const p = model.generateContent(payload);
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('AI request timeout')), timeoutMs));
+            const result = await Promise.race([p, timeoutPromise]);
+            return result;
+        } catch (err) {
+            console.error(`AI call attempt ${attempt + 1} failed:`, err && (err.stack || err.message || err));
+            if (attempt === retries) throw err;
+            // small backoff before retry
+            await new Promise(r => setTimeout(r, 500));
+        }
+    }
+}
 
 module.exports.chatController = async (req, res) => {
     const userMessage = req.body.message;
@@ -10,21 +33,33 @@ module.exports.chatController = async (req, res) => {
     }
 
     try {
-        // 2. 先获取模型实例（关键步骤）
         const model = ai.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
-        
-        // 3. 调用生成内容的方法
-        const result = await model.generateContent({
+
+        const payload = {
             model: "gemini-2.0-flash-lite",
-            contents: [{ role: "user", parts: [{ text: userMessage }] }],
-            
-        });
-        
-        // 4. 提取回复文本
-        const aiAnswer = result.response.text();
-        res.json({ reply: aiAnswer });
+            contents: [{ role: "user", parts: [{ text: userMessage }] }]
+        };
+
+        // call with timeout and single retry
+        const result = await callModelWithTimeout(model, payload, 8000, 1);
+
+        // Extract reply text - guard for API shape
+        let aiAnswer = '';
+        try {
+            aiAnswer = (result && result.response && typeof result.response.text === 'function') ? result.response.text() : (result && result.responseText) || '';
+        } catch (e) {
+            console.error('Failed to parse AI response:', e, result);
+        }
+
+        if (!aiAnswer) {
+            console.error('AI returned empty response:', result);
+            return res.status(502).json({ error: 'AI 服务未返回结果，请稍后再试。' });
+        }
+
+        return res.json({ reply: aiAnswer });
     } catch (error) {
-        console.error("AI 调用出错：", error);
-        res.status(500).json({ error: "AI 调用出错，请稍后再试。" });
+        console.error('AI 调用出错（final）:', error && (error.stack || error.message || error));
+        // 503 Service Unavailable is appropriate for upstream dependency failure
+        return res.status(503).json({ error: 'AI 服务不可用，请稍后再试。' });
     }
 };
