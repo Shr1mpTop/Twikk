@@ -23,4 +23,16 @@
         </div>
     </div>
 
+    <script>
+        // Add grok-page class to body for theme transition
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.classList.add('grok-page');
+        });
+
+        // Remove grok-page class when leaving the page
+        window.addEventListener('beforeunload', function () {
+            document.body.classList.remove('grok-page');
+        });
+    </script>
+
     <%- include('../layouts/footer') %>

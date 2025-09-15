@@ -1,0 +1,441 @@
+/* Login Page - Twitter Style */
+
+/* Twitter Style Sidebar */
+.col-md-3.vh-100.position-fixed {
+    background: linear-gradient(135deg, #15202b 0%, #192734 50%, #253341 100%) !important;
+    border-right: 1px solid #38444d;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.col-md-3 .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1da1f2 !important;
+    text-shadow: 0 2px 10px rgba(29, 161, 242, 0.3);
+}
+
+.col-md-3 .logo i {
+    color: #1da1f2;
+    margin-right: 10px;
+}
+
+.col-md-3 .nav-link {
+    color: #ffffff !important;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.col-md-3 .nav-link:hover {
+    background: linear-gradient(135deg, rgba(29, 161, 242, 0.1), rgba(29, 161, 242, 0.2));
+    color: #1da1f2 !important;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+}
+
+.col-md-3 .nav-link.active {
+    background: linear-gradient(135deg, #1da1f2, #1991db);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(29, 161, 242, 0.4);
+}
+
+.col-md-3 .nav-link i {
+    color: inherit;
+    transition: all 0.3s ease;
+    width: 20px;
+    text-align: center;
+}
+
+/* 主背景设计 */
+.container-fluid {
+    background: linear-gradient(135deg, #0f1419 0%, #15202b 50%, #192734 100%);
+    min-height: 100vh;
+    position: relative;
+}
+
+.container-fluid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(29, 161, 242, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(23, 191, 99, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Twitter Logo 左侧动画 */
+.fab.fa-twitter {
+    color: #1da1f2;
+    animation: twitterFloat 4s ease-in-out infinite;
+    text-shadow:
+        0 0 20px rgba(29, 161, 242, 0.4),
+        0 0 40px rgba(29, 161, 242, 0.2);
+    filter: drop-shadow(0 4px 8px rgba(29, 161, 242, 0.3));
+}
+
+@keyframes twitterFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        text-shadow: 0 0 20px rgba(29, 161, 242, 0.4);
+    }
+
+    25% {
+        transform: translateY(-10px) rotate(2deg);
+        text-shadow: 0 0 30px rgba(29, 161, 242, 0.6);
+    }
+
+    75% {
+        transform: translateY(-5px) rotate(-1deg);
+        text-shadow: 0 0 25px rgba(29, 161, 242, 0.5);
+    }
+}
+
+/* 登录卡片设计 */
+.twitter-card {
+    background: linear-gradient(145deg, #192734 0%, #253341 100%);
+    border: 1px solid #38444d;
+    border-radius: 24px;
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 1px 1px rgba(255, 255, 255, 0.1) inset,
+        0 -1px 1px rgba(0, 0, 0, 0.1) inset;
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.twitter-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 15px 50px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(29, 161, 242, 0.2);
+}
+
+/* 顶部装饰线 */
+.twitter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+            #1da1f2 0%,
+            #17bf63 25%,
+            #f91880 50%,
+            #ffad1f 75%,
+            #1da1f2 100%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: translateX(-100%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(100%);
+    }
+}
+
+/* Logo 增强 */
+.logo {
+    font-size: 1.9rem;
+    font-weight: bold;
+    color: #1da1f2;
+    text-shadow: 0 2px 12px rgba(29, 161, 242, 0.4);
+    position: relative;
+    display: inline-block;
+}
+
+.logo i {
+    margin-right: 10px;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* 标题样式 */
+h2 {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+
+/* 表单控件增强 */
+.form-control {
+    background: linear-gradient(145deg, #192734, #1e2732);
+    border: 2px solid #38444d;
+    border-radius: 14px;
+    color: #ffffff;
+    padding: 14px 18px;
+    font-size: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.form-control:focus {
+    background: linear-gradient(145deg, #253341, #2a3a4a);
+    border-color: #1da1f2;
+    box-shadow:
+        0 0 0 4px rgba(29, 161, 242, 0.1),
+        0 6px 20px rgba(29, 161, 242, 0.15),
+        inset 0 1px 3px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-control::placeholder {
+    color: #8899a6;
+    transition: color 0.3s ease;
+}
+
+.form-control:focus::placeholder {
+    color: #aab8c2;
+}
+
+/* 标签动画 */
+.form-label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.form-control:focus+.form-label {
+    color: #1da1f2;
+}
+
+/* 登录按钮设计 */
+.btn-twitter {
+    background: linear-gradient(135deg, #1da1f2 0%, #1991db 50%, #1580c7 100%);
+    border: none;
+    border-radius: 28px;
+    padding: 14px 28px;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 4px 15px rgba(29, 161, 242, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-twitter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-twitter:hover {
+    background: linear-gradient(135deg, #1991db 0%, #1580c7 50%, #126ba5 100%);
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 25px rgba(29, 161, 242, 0.6),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.btn-twitter:hover::before {
+    left: 100%;
+}
+
+.btn-twitter:active {
+    transform: translateY(-1px);
+    transition: all 0.1s ease;
+}
+
+/* 错误消息样式 */
+.alert-danger {
+    background: linear-gradient(135deg, rgba(249, 24, 128, 0.1), rgba(249, 24, 128, 0.05));
+    border: 1px solid rgba(249, 24, 128, 0.3);
+    border-left: 4px solid #f91880;
+    border-radius: 12px;
+    color: #ff6b9d;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* 链接样式增强 */
+.text-twitter {
+    color: #1da1f2;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    position: relative;
+    display: inline-block;
+}
+
+.text-twitter::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #1da1f2, #17bf63);
+    transition: width 0.3s ease;
+}
+
+.text-twitter:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(29, 161, 242, 0.8);
+    transform: translateY(-1px);
+}
+
+.text-twitter:hover::after {
+    width: 100%;
+}
+
+/* 底部文本样式 */
+.text-center.mt-4 p {
+    color: #8899a6;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* 图标动画 */
+.fa-sign-in-alt,
+.fa-user-plus {
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-twitter:hover .fa-sign-in-alt,
+.text-twitter:hover .fa-user-plus {
+    transform: translateX(3px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .fab.fa-twitter {
+        font-size: 10rem !important;
+    }
+
+    .twitter-card {
+        margin: 15px;
+        padding: 2.5rem !important;
+        border-radius: 20px;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-control {
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+
+    .btn-twitter {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .twitter-card {
+        margin: 10px;
+        padding: 2rem !important;
+    }
+}
+
+/* 输入验证状态 */
+.form-control:valid {
+    border-color: #17bf63;
+    box-shadow: 0 0 0 2px rgba(23, 191, 99, 0.1);
+}
+
+.form-control:invalid:not(:placeholder-shown) {
+    border-color: #f91880;
+    box-shadow: 0 0 0 2px rgba(249, 24, 128, 0.1);
+}
+
+/* 加载状态 */
+.btn-twitter:disabled {
+    background: linear-gradient(135deg, #38444d, #2c3e50);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-twitter:disabled::before {
+    display: none;
+}
+
+/* 微妙的滚动动画 */
+@media (prefers-reduced-motion: no-preference) {
+    .twitter-card {
+        animation: slideInUp 0.6s ease-out;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

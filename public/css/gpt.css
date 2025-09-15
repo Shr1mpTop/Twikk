@@ -1,3 +1,202 @@
+/* Grok/GPT Page Styles */
+
+/* Twitter Style Sidebar - Default State */
+.col-md-3.vh-100.position-fixed {
+    background: linear-gradient(135deg, #15202b 0%, #192734 50%, #253341 100%) !important;
+    border-right: 1px solid #38444d;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+/* Sidebar Content Styling */
+.col-md-3 .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1da1f2 !important;
+    text-shadow: 0 2px 10px rgba(29, 161, 242, 0.3);
+    transition: all 1s ease;
+}
+
+.col-md-3 .logo i {
+    color: #1da1f2;
+    margin-right: 10px;
+    transition: all 1s ease;
+}
+
+/* Navigation Links */
+.col-md-3 .nav-link {
+    color: #ffffff !important;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease, background-color 1s ease, color 1s ease;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.col-md-3 .nav-link:hover {
+    background: linear-gradient(135deg, rgba(29, 161, 242, 0.1), rgba(29, 161, 242, 0.2));
+    color: #1da1f2 !important;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+}
+
+.col-md-3 .nav-link.active {
+    background: linear-gradient(135deg, #1da1f2, #1991db);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(29, 161, 242, 0.4);
+}
+
+.col-md-3 .nav-link i {
+    color: inherit;
+    transition: all 0.3s ease, color 1s ease;
+    width: 20px;
+    text-align: center;
+}
+
+/* Grok Page - Black Theme Transition */
+body.grok-page .col-md-3.vh-100.position-fixed {
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #111111 100%) !important;
+    border-right: 1px solid #333333;
+    animation: sidebarToBlack 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+body.grok-page .col-md-3 .logo {
+    color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    animation: logoToWhite 1s ease forwards;
+}
+
+body.grok-page .col-md-3 .logo i {
+    color: #ffffff;
+    animation: iconToWhite 1s ease forwards;
+}
+
+body.grok-page .col-md-3 .nav-link {
+    color: #cccccc !important;
+    animation: linkToGray 1s ease forwards;
+}
+
+body.grok-page .col-md-3 .nav-link:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+    color: #ffffff !important;
+}
+
+body.grok-page .col-md-3 .nav-link.active {
+    background: linear-gradient(135deg, #333333, #444444);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Animation Keyframes */
+@keyframes sidebarToBlack {
+    0% {
+        background: linear-gradient(135deg, #15202b 0%, #192734 50%, #253341 100%);
+        border-right-color: #38444d;
+    }
+
+    100% {
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #111111 100%);
+        border-right-color: #333333;
+    }
+}
+
+@keyframes logoToWhite {
+    0% {
+        color: #1da1f2;
+        text-shadow: 0 2px 10px rgba(29, 161, 242, 0.3);
+    }
+
+    100% {
+        color: #ffffff;
+        text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+}
+
+@keyframes iconToWhite {
+    0% {
+        color: #1da1f2;
+    }
+
+    100% {
+        color: #ffffff;
+    }
+}
+
+@keyframes linkToGray {
+    0% {
+        color: #ffffff;
+    }
+
+    100% {
+        color: #cccccc;
+    }
+}
+
+/* Reverse animations when leaving grok page */
+@keyframes sidebarToTwitter {
+    0% {
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #111111 100%);
+        border-right-color: #333333;
+    }
+
+    100% {
+        background: linear-gradient(135deg, #15202b 0%, #192734 50%, #253341 100%);
+        border-right-color: #38444d;
+    }
+}
+
+@keyframes logoToBlue {
+    0% {
+        color: #ffffff;
+        text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    100% {
+        color: #1da1f2;
+        text-shadow: 0 2px 10px rgba(29, 161, 242, 0.3);
+    }
+}
+
+@keyframes iconToBlue {
+    0% {
+        color: #ffffff;
+    }
+
+    100% {
+        color: #1da1f2;
+    }
+}
+
+@keyframes linkToWhite {
+    0% {
+        color: #cccccc;
+    }
+
+    100% {
+        color: #ffffff;
+    }
+}
+
+/* Page transition effects */
+body:not(.grok-page) .col-md-3.vh-100.position-fixed {
+    animation: sidebarToTwitter 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+body:not(.grok-page) .col-md-3 .logo {
+    animation: logoToBlue 1s ease forwards;
+}
+
+body:not(.grok-page) .col-md-3 .logo i {
+    animation: iconToBlue 1s ease forwards;
+}
+
+body:not(.grok-page) .col-md-3 .nav-link {
+    animation: linkToWhite 1s ease forwards;
+}
+
 html,
 body {
     height: 100%;
@@ -20,6 +219,7 @@ body {
     padding-top: 35vh;
     /* 调整此值以控制整体上移的距离 */
 }
+
 .canvas {
     position: fixed;
     top: 0;
@@ -27,8 +227,9 @@ body {
     margin-left: 25%;
     width: 100%;
     height: 100%;
-    
+
 }
+
 .text-center img {
     margin: 0 5px;
     filter: invert(1) grayscale(100%) brightness(200%);
@@ -102,8 +303,9 @@ body {
     box-shadow: none !important;
     background-color: transparent !important;
 }
-.chat-textarea::placeholder{
- color: white;
+
+.chat-textarea::placeholder {
+    color: white;
 }
 
 .message {
@@ -130,10 +332,10 @@ body {
 }
 
 .chat-input-local.fixed-bottom {
-  position: fixed;
-  bottom: 20px;
-  left: 25%;
-  max-width: 55%;
+    position: fixed;
+    bottom: 20px;
+    left: 25%;
+    max-width: 55%;
 }
 
 
@@ -141,10 +343,11 @@ body {
 
     height: calc(100vh - 150px);
     overflow-y: auto;
-    padding:20px;
-    width:75%;
-    border-radius:20px;
+    padding: 20px;
+    width: 75%;
+    border-radius: 20px;
 }
+
 canvas {
     display: block;
     position: absolute;
@@ -154,26 +357,38 @@ canvas {
     height: 100%;
     z-index: -1;
 }
+
 /* loading animation */
 /* 在现有CSS中添加 */
 .loading-container {
     display: flex;
     align-items: center;
-    padding: 12px 16px; /* 与消息气泡保持一致内边距 */
-    z-index: 10; /* 确保在消息气泡之上 */
+    padding: 12px 16px;
+    /* 与消息气泡保持一致内边距 */
+    z-index: 10;
+    /* 确保在消息气泡之上 */
 }
 
 .loading-spinner {
     width: 24px;
     height: 24px;
-    border: 3px solid rgba(255, 255, 255, 0.2); /* 淡白色边框 */
-    border-top-color: white; /* 白色光圈 */
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    /* 淡白色边框 */
+    border-top-color: white;
+    /* 白色光圈 */
     border-radius: 50%;
-    animation: spin 1s linear infinite; /* 旋转动画 */
+    animation: spin 1s linear infinite;
+    /* 旋转动画 */
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
+
 /* 图片上传 */
