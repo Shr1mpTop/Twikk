@@ -147,16 +147,46 @@
           <div id="tweets-container">
             <% if (tweets && tweets.length > 0) { %>
               <% tweets.forEach(tweet => { %>
-                <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm">
+                <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="<%= tweet._id %>">
                   <div class="d-flex align-items-center mb-2">
                     <i class="fas fa-user-circle text-twitter me-2"></i>
                     <strong class="text-white"><%= tweet.authorName %></strong>
                     <span class="text-muted ms-2">@<%= tweet.authorName.toLowerCase().replace(/\s+/g, '') %></span>
                   </div>
                   <p class="text-light mb-0"><%= tweet.content %></p>
-                  <small class="text-muted">
-                    <i class="fas fa-clock me-1"></i><%= new Date(tweet.createdAt).toLocaleString() %>
-                  </small>
+                  <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
+                    <small class="text-muted">
+                      <i class="fas fa-clock me-1"></i><%= new Date(tweet.createdAt).toLocaleString() %>
+                    </small>
+                    <div>
+                      <button class="btn btn-sm btn-like <%= tweet.isLikedByCurrentUser ? 'liked' : '' %>"
+                        data-tweet-id="<%= tweet._id %>">
+                        <i class="fas fa-heart"></i>
+                        <span class="likes-count"><%= tweet.likesCount || 0 %></span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 评论区 -->
+                  <div class="comments-section mt-3">
+                    <div class="comments-list">
+                      <% if (tweet.comments && tweet.comments.length > 0) { %>
+                        <% tweet.comments.slice(-3).forEach(comment => { %>
+                          <div class="comment mb-2">
+                            <strong class="text-white"><%= comment.authorName %></strong>
+                            <span class="text-muted ms-2"><%= new Date(comment.createdAt).toLocaleString() %></span>
+                            <p class="text-light mb-1"><%= comment.content %></p>
+                          </div>
+                        <% }) %>
+                      <% } %>
+                    </div>
+
+                    <form class="comment-form d-flex mt-2" data-tweet-id="<%= tweet._id %>">
+                      <input type="text" name="content" class="form-control form-control-sm me-2"
+                        placeholder="Write a comment..." required maxlength="1000">
+                      <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
+                    </form>
+                  </div>
                 </div>
               <% }) %>
             <% } else { %>
@@ -257,9 +287,38 @@
               <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
             </div>
             <p class="text-light mb-0">${tweet.content}</p>
-            <small class="text-muted">
-              <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
-            </small>
+            <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
+              </small>
+              <div>
+                <button class="btn btn-sm btn-like ${tweet.isLikedByCurrentUser ? 'liked' : ''}" data-tweet-id="${tweet._id}">
+                  <i class="fas fa-heart"></i>
+                  <span class="likes-count">${tweet.likesCount || 0}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 评论区 -->
+            <div class="comments-section mt-3">
+              <div class="comments-list">
+                ${tweet.comments && tweet.comments.length > 0 ? 
+                  tweet.comments.slice(-3).map(comment => `
+                    <div class="comment mb-2">
+                      <strong class="text-white">${comment.authorName}</strong>
+                      <span class="text-muted ms-2">${new Date(comment.createdAt).toLocaleString()}</span>
+                      <p class="text-light mb-1">${comment.content}</p>
+                    </div>
+                  `).join('') : ''
+                }
+              </div>
+
+              <form class="comment-form d-flex mt-2" data-tweet-id="${tweet._id}">
+                <input type="text" name="content" class="form-control form-control-sm me-2"
+                  placeholder="Write a comment..." required maxlength="1000">
+                <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
+              </form>
+            </div>
           `;
           tweetsContainer.appendChild(tweetElement);
         });
@@ -290,6 +349,82 @@
 
   // 绑定加载更多按钮点击事件
   document.getElementById('load-more-btn').addEventListener('click', loadMoreTweets);
+
+  // 点赞功能
+  document.addEventListener('click', async function(e) {
+    const likeBtn = e.target.closest('.btn-like');
+    if (!likeBtn) return;
+
+    const tweetId = likeBtn.getAttribute('data-tweet-id');
+    if (!tweetId) return;
+
+    try {
+      likeBtn.disabled = true;
+      const resp = await fetch(`/like/${tweetId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await resp.json();
+      if (data && data.ok) {
+        const likesCountSpan = likeBtn.querySelector('.likes-count');
+        likesCountSpan.textContent = data.likesCount;
+        if (data.action === 'liked') {
+          likeBtn.classList.add('liked');
+        } else {
+          likeBtn.classList.remove('liked');
+        }
+      } else if (data && data.error) {
+        alert('Error: ' + data.error);
+      }
+    } catch (err) {
+      console.error('Like action failed', err);
+      alert('Like failed.');
+    } finally {
+      likeBtn.disabled = false;
+    }
+  });
+
+  // 评论功能
+  document.addEventListener('submit', async function(e) {
+    const form = e.target.closest('.comment-form');
+    if (!form) return;
+    e.preventDefault();
+
+    const tweetId = form.getAttribute('data-tweet-id');
+    const input = form.querySelector('input[name="content"]');
+    if (!input) return;
+    const content = input.value.trim();
+    if (!content) return;
+
+    try {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+
+      const resp = await fetch(`/comment/${tweetId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      });
+      const data = await resp.json();
+      if (data && data.ok) {
+        input.value = '';
+        const commentsList = form.previousElementSibling;
+        const newComment = document.createElement('div');
+        newComment.className = 'comment mb-2';
+        newComment.innerHTML = `
+          <strong class="text-white">${data.comment.authorName}</strong>
+          <span class="text-muted ms-2">${new Date(data.comment.createdAt).toLocaleString()}</span>
+          <p class="text-light mb-1">${data.comment.content}</p>
+        `;
+        commentsList.appendChild(newComment);
+      } else if (data && data.error) {
+        alert('Error: ' + data.error);
+      }
+    } catch (err) {
+      console.error('Comment failed', err);
+      alert('Comment failed.');
+    } finally {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
 </script>
 
 <%- include('../layouts/footer') %>

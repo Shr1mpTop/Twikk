@@ -23,8 +23,22 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function() {
+            return !this.walletAddress; // Password is required only if no wallet address
+        },
         minlength: 6
+    },
+    walletAddress: {
+        type: String,
+        unique: true,
+        sparse: true, // Allows multiple null values
+        trim: true,
+        lowercase: true
+    },
+    loginMethod: {
+        type: String,
+        enum: ['email', 'wallet'],
+        default: 'email'
     }
 }, {
     timestamps: true
@@ -32,7 +46,7 @@ const UserSchema = new mongoose.Schema({
 
 // Password hashing middleware
 UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
+    if (!this.isModified('password') || !this.password) return next();
 
     try {
         const salt = await bcrypt.genSalt(10);

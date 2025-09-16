@@ -21,6 +21,9 @@ module.exports = function (app) {
 
   app.get('/login', users.getLogin);
   app.post('/login', users.postLogin);
+  
+  // MetaMask login
+  app.post('/auth/metamask', users.postMetaMaskLogin);
 
   app.get('/logout', users.logout);
 

@@ -421,6 +421,129 @@ h2 {
     display: none;
 }
 
+/* MetaMask Button Styles */
+.btn-outline-primary {
+    background: linear-gradient(145deg, #192734, #1e2732);
+    border: 2px solid #627eea;
+    border-radius: 28px;
+    padding: 14px 28px;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #627eea;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 4px 15px rgba(98, 126, 234, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-outline-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(98, 126, 234, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #627eea 0%, #4c63d2 50%, #3b4cc7 100%);
+    border-color: #627eea;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 25px rgba(98, 126, 234, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.btn-outline-primary:hover::before {
+    left: 100%;
+}
+
+.btn-outline-primary:active {
+    transform: translateY(-1px);
+    transition: all 0.1s ease;
+}
+
+.btn-outline-primary:disabled {
+    background: linear-gradient(135deg, #38444d, #2c3e50);
+    border-color: #38444d;
+    color: #8899a6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-outline-primary:disabled::before {
+    display: none;
+}
+
+/* Divider Styles */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #38444d, transparent);
+}
+
+.divider-text {
+    background: linear-gradient(145deg, #192734, #253341);
+    color: #8899a6;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+/* MetaMask Error Styles */
+.metamask-error {
+    background: linear-gradient(135deg, rgba(249, 24, 128, 0.1), rgba(249, 24, 128, 0.05));
+    border: 1px solid rgba(249, 24, 128, 0.3);
+    border-left: 4px solid #f91880;
+    border-radius: 12px;
+    color: #ff6b9d;
+    padding: 12px 16px;
+    backdrop-filter: blur(10px);
+    animation: errorShake 0.5s ease-in-out;
+}
+
+/* Ethereum Icon Animation */
+.fab.fa-ethereum {
+    color: #627eea;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-outline-primary:hover .fab.fa-ethereum {
+    transform: rotate(360deg);
+    color: #ffffff;
+}
+
+/* Spinner Animation */
+.fa-spinner.fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Subtle scroll animation */
 @media (prefers-reduced-motion: no-preference) {
     .twitter-card {

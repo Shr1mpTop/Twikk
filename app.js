@@ -12,7 +12,7 @@ const app = express();
 
 // 配置监听地址和端口
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '0.0.0.0'; // 允许外部访问
+const HOST = process.env.HOST || 'localhost'; // 本地测试
 
 // 允许跨域（生产环境请按需限制来源）
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -110,6 +110,7 @@ require('./config/routes')(app);
 
 // 启动服务器
 app.listen(PORT, HOST, () => {
-    console.log(`Server is running on http://${HOST}:${PORT}`);
-    console.log(`Access your app at: http://hezhili.online:${PORT}`);
+    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
+    console.log(`📱 Access your app at: http://localhost:${PORT}`);
+    console.log(`🔧 This is your LOCAL test environment`);
 });
