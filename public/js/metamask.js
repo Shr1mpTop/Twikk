@@ -29,9 +29,25 @@ async function connectMetaMask() {
     });
 
     if (!res.ok) {
-      const txt = await res.text();
-      console.error('Auth failed', res.status, txt);
-      alert('MetaMask authentication failed');
+      // Try to parse JSON error body, otherwise fall back to text
+      let bodyText = '';
+      try {
+        const json = await res.json();
+        bodyText = json && json.error ? json.error : JSON.stringify(json);
+      } catch (e) {
+        bodyText = await res.text();
+      }
+      console.error('Auth failed', res.status, bodyText);
+      // If server says wallet not linked, offer to create new account and link wallet
+      if (res.status === 404 && bodyText && bodyText.toLowerCase().includes('no account linked')) {
+        if (confirm('No account linked to this wallet. Would you like to create a new account using this wallet?')) {
+          // Redirect to register with wallet query param
+          window.location.href = '/register?wallet=' + encodeURIComponent(account);
+          return;
+        }
+      }
+
+      alert('MetaMask authentication failed: ' + (bodyText || res.statusText));
       return;
     }
 
@@ -47,4 +63,23 @@ async function connectMetaMask() {
 document.addEventListener('DOMContentLoaded', () => {
   const el = document.getElementById('metamask-login-btn');
   if (el) el.addEventListener('click', connectMetaMask);
+  const unlinkBtn = document.getElementById('unlink-wallet-btn');
+  if (unlinkBtn) unlinkBtn.addEventListener('click', unlinkWallet);
 });
+
+async function unlinkWallet() {
+  if (!confirm('Are you sure you want to unlink your wallet from this account?')) return;
+  try {
+    const res = await fetch('/auth/unlink-wallet', { method: 'POST', credentials: 'include' });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      alert('Wallet unlinked');
+      location.reload();
+    } else {
+      alert('Failed to unlink wallet: ' + (data && data.error ? data.error : res.statusText));
+    }
+  } catch (err) {
+    console.error('Unlink failed', err);
+    alert('Unlink failed');
+  }
+}
