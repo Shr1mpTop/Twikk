@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: function() {
+           // Ethereum wallet address for MetaMask login
             return !this.walletAddress; // Password is required only if no wallet address
         },
         minlength: 6

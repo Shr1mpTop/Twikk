@@ -94,37 +94,36 @@ exports.logout = (req, res) => {
 // MetaMask login handler
 exports.postMetaMaskLogin = async (req, res) => {
   try {
-    const { address, signature, message, timestamp } = req.body;
+    const { address, signature, message } = req.body;
 
-    if (!address || !signature || !message) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required authentication data'
-      });
+    if (!address) {
+      return res.status(400).json({ success: false, error: 'Missing wallet address' });
     }
 
-    // Verify the signature
-    const recoveredAddress = ethers.verifyMessage(message, signature);
-    
-    if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid signature'
-      });
+    // If signature and message are provided, verify ownership.
+    if (signature && message) {
+      try {
+        const recoveredAddress = ethers.verifyMessage(message, signature);
+        if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
+          return res.status(400).json({ success: false, error: 'Invalid signature' });
+        }
+      } catch (e) {
+        console.error('Signature verify error', e);
+        return res.status(400).json({ success: false, error: 'Signature verification failed' });
+      }
     }
 
-    // Check if user exists with this wallet address
+    // Address-only flow: not secure, but convenient for quick testing.
     let user = await User.findOne({ walletAddress: address.toLowerCase() });
 
     if (!user) {
-      // Create new user with wallet address
-      const username = `user_${address.slice(0, 8)}`;
-      const name = `Wallet User ${address.slice(0, 6)}...${address.slice(-4)}`;
-      
+      const username = `user_${address.slice(2, 10)}`;
+      const name = `Wallet User ${address.slice(2, 6)}...${address.slice(-4)}`;
+
       user = new User({
-        name: name,
-        username: username,
-        email: `${address.toLowerCase()}@wallet.local`, // Placeholder email
+        name,
+        username,
+        email: `${address.toLowerCase()}@wallet.local`,
         walletAddress: address.toLowerCase(),
         loginMethod: 'wallet'
       });
@@ -132,7 +131,6 @@ exports.postMetaMaskLogin = async (req, res) => {
       await user.save();
     }
 
-    // Set session
     req.session.userId = user._id.toString();
     req.session.user = {
       id: user._id.toString(),
@@ -143,25 +141,10 @@ exports.postMetaMaskLogin = async (req, res) => {
       loginMethod: user.loginMethod
     };
 
-    res.json({
-      success: true,
-      message: 'Login successful',
-      user: {
-        id: user._id.toString(),
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        walletAddress: user.walletAddress,
-        loginMethod: user.loginMethod
-      }
-    });
-
+    res.json({ success: true, message: 'Login successful', user: req.session.user });
   } catch (error) {
     console.error('MetaMask login error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Login failed. Please try again later.'
-    });
+    res.status(500).json({ success: false, error: 'Login failed. Please try again later.' });
   }
 };
 
