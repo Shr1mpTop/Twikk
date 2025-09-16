@@ -35,10 +35,18 @@ exports.getMoreTweets = async (req, res) => {
       .limit(limit)
       .lean();
 
+    // 标记当前用户是否已点赞（与timeline函数保持一致）
+    const userId = req.session.user.id;
+    const tweetsWithLiked = tweets.map(t => {
+      return Object.assign({}, t, { 
+        isLikedByCurrentUser: Array.isArray(t.likedBy) && t.likedBy.some(id => id.toString() === userId) 
+      });
+    });
+
     const hasMore = tweets.length === limit;
 
     res.json({
-      tweets,
+      tweets: tweetsWithLiked,
       hasMore,
       nextPage: hasMore ? page + 1 : null
     });
@@ -56,11 +64,18 @@ exports.create = async (req, res) => {
   if (!content) return res.redirect('/dashboard');
 
   try {
-    await Tweet.create({
+    const tweetData = {
       authorId: req.session.user.id,
       authorName: req.session.user.name || req.session.user.username || 'Anonymous',
       content
-    });
+    };
+
+    // 如果选择了社群，添加到推文数据中
+    if (req.body.category && req.body.category.trim() !== '') {
+      tweetData.category = req.body.category.trim();
+    }
+
+    await Tweet.create(tweetData);
     res.redirect('/dashboard');
   } catch (err) {
     console.error(err);
@@ -86,9 +101,17 @@ exports.search = async (req, res) => {
       .limit(50)
       .lean();
 
+    // 标记当前用户是否已点赞（与timeline函数保持一致）
+    const userId = req.session.user.id;
+    const tweetsWithLiked = tweets.map(t => {
+      return Object.assign({}, t, { 
+        isLikedByCurrentUser: Array.isArray(t.likedBy) && t.likedBy.some(id => id.toString() === userId) 
+      });
+    });
+
     res.json({
-      tweets,
-      total: tweets.length,
+      tweets: tweetsWithLiked,
+      total: tweetsWithLiked.length,
       query: query
     });
   } catch (err) {
