@@ -28,8 +28,16 @@ exports.getCommunityTweets = async (req, res) => {
       .limit(limit)
       .lean();
 
+    // 标记当前用户是否已点赞（与timeline函数保持一致）
+    const userId = req.session.user.id;
+    const tweetsWithLiked = tweets.map(t => {
+      return Object.assign({}, t, { 
+        isLikedByCurrentUser: Array.isArray(t.likedBy) && t.likedBy.some(id => id.toString() === userId) 
+      });
+    });
+
     const totalTweets = await Tweet.countDocuments({ category: category });
-    const hasMore = skip + tweets.length < totalTweets;
+    const hasMore = skip + tweetsWithLiked.length < totalTweets;
 
     // 获取该分类的统计信息
     const stats = await Tweet.aggregate([
@@ -47,7 +55,7 @@ exports.getCommunityTweets = async (req, res) => {
     res.render('pages/community-tweets', {
       user: req.session.user,
       category: category,
-      tweets: tweets,
+      tweets: tweetsWithLiked,
       stats: stats,
       currentPage: page,
       hasMore: hasMore,
@@ -80,11 +88,19 @@ exports.getMoreCommunityTweets = async (req, res) => {
       .limit(limit)
       .lean();
 
+    // 标记当前用户是否已点赞（与timeline函数保持一致）
+    const userId = req.session.user.id;
+    const tweetsWithLiked = tweets.map(t => {
+      return Object.assign({}, t, { 
+        isLikedByCurrentUser: Array.isArray(t.likedBy) && t.likedBy.some(id => id.toString() === userId) 
+      });
+    });
+
     const totalTweets = await Tweet.countDocuments({ category: category });
-    const hasMore = skip + tweets.length < totalTweets;
+    const hasMore = skip + tweetsWithLiked.length < totalTweets;
 
     res.json({
-      tweets,
+      tweets: tweetsWithLiked,
       hasMore,
       nextPage: hasMore ? page + 1 : null,
       totalTweets
