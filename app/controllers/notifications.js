@@ -43,15 +43,15 @@ exports.getNotifications = async (req, res) => {
       .populate('tweet', 'content')
       .sort({ createdAt: -1 })
       .lean();
-    
+
     // 将 filter 变量传递给 EJS 模板
-    res.render('pages/notifications', { 
-      user: req.session.user, 
-      notifications, 
+    res.render('pages/notifications', {
+      user: req.session.user,
+      notifications,
       filter,
       pageStyles: '/css/notification.css'
     });
-    
+
     // 如果是 “全部” 页面，将未读通知标记为已读
     if (filter === 'all') {
       await Notification.updateMany(
@@ -59,7 +59,7 @@ exports.getNotifications = async (req, res) => {
         { $set: { read: true } }
       );
     }
-    
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');

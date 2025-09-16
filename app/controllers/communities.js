@@ -5,7 +5,7 @@ const Tweet = require('../models/tweet');
 // 显示Communities页面
 exports.getCommunities = (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  res.render('pages/communities', { 
+  res.render('pages/communities', {
     user: req.session.user,
     pageStyles: '/css/communities.css'
   });
@@ -14,34 +14,36 @@ exports.getCommunities = (req, res) => {
 // 显示特定社群的推文
 exports.getCommunityTweets = async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  
+
   try {
     const { category } = req.params;
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
     const skip = (page - 1) * limit;
-    
+
     // 获取该分类的推文
     const tweets = await Tweet.find({ category: category })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
-    
+
     const totalTweets = await Tweet.countDocuments({ category: category });
     const hasMore = skip + tweets.length < totalTweets;
-    
+
     // 获取该分类的统计信息
     const stats = await Tweet.aggregate([
       { $match: { category: category } },
-      { $group: { 
-        _id: '$authorName', 
-        count: { $sum: 1 },
-        totalLikes: { $sum: '$likesCount' }
-      }},
+      {
+        $group: {
+          _id: '$authorName',
+          count: { $sum: 1 },
+          totalLikes: { $sum: '$likesCount' }
+        }
+      },
       { $sort: { count: -1 } }
     ]);
-    
+
     res.render('pages/community-tweets', {
       user: req.session.user,
       category: category,
@@ -52,12 +54,12 @@ exports.getCommunityTweets = async (req, res) => {
       totalTweets: totalTweets,
       pageStyles: '/css/communities.css'
     });
-    
+
   } catch (error) {
     console.error('Error fetching community tweets:', error);
-    res.status(500).render('pages/error', { 
+    res.status(500).render('pages/error', {
       error: 'Failed to load community tweets',
-      user: req.session.user 
+      user: req.session.user
     });
   }
 };
