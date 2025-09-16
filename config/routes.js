@@ -6,7 +6,7 @@ const tweets = require(path.join(__dirname, '..', 'app', 'controllers', 'tweets'
 const communities = require(path.join(__dirname, '..', 'app', 'controllers', 'communities'));
 
 module.exports = function (app) {
-  // 首页：根据是否登录跳转
+  // Home: redirect based on login status
   app.get('/', (req, res) => {
     if (req.session.userId) {
       res.redirect('/dashboard');
@@ -15,7 +15,7 @@ module.exports = function (app) {
     }
   });
 
-  // 注册 / 登录 / 注销
+  // Register / Login / Logout
   app.get('/register', users.getRegister);
   app.post('/register', users.postRegister);
 
@@ -24,34 +24,34 @@ module.exports = function (app) {
 
   app.get('/logout', users.logout);
 
-  // 仪表盘（显示时间线）
+  // Dashboard (shows timeline)
   app.get('/dashboard', tweets.timeline);
 
-  // 发推
+  // Post tweet
   app.post('/tweet', tweets.create);
   
-  // API: 获取更多推文（无限滚动）
+  // API: get more tweets (infinite scroll)
   app.get('/api/tweets', tweets.getMoreTweets);
   
-  // API: 搜索推文
+  // API: search tweets
   app.get('/api/search', tweets.search);
 
   
-  // Communities页面
+  // Communities page
   app.get('/communities', communities.getCommunities);
   
-  // 社群推文页面
+  // Community tweets page
   app.get('/communities/:category', communities.getCommunityTweets);
   
-  // API: 获取更多社群推文（无限滚动）
+  // API: get more community tweets (infinite scroll)
   app.get('/api/communities/:category/tweets', communities.getMoreCommunityTweets);
 
-  // GPT 聊天页面
+  // GPT chat page
   app.get('/gpt-chat', (req, res) => {
     if (!req.session.user) {
       return res.redirect('/login');
     }
-    // 将 req.session.user 对象传递给 gpt.ejs 模板
+  // Pass req.session.user object to gpt.ejs template
     res.render('pages/gpt', { user: req.session.user, pageStyles: '/css/gpt.css', pageScripts: '/js/Grok.js' });
   });
   app.post("/api/chat", chatController);

@@ -27,9 +27,9 @@ exports.postRegister = async (req, res) => {
       return res.render('pages/register', { error: 'Email is already registered', success: null });
     }
 
-    // 移除这一行的哈希，让 user.js 中的 pre('save') 钩子来处理
+  // Let the pre('save') hook in user.js handle password hashing
     const user = new User({ name, username, email, password });
-    await user.save(); // 密码在这里被 user.js 中的 pre('save') 钩子自动哈希
+  await user.save(); // Password will be hashed by the pre('save') hook in user.js
 
     req.session.userId = user._id.toString();
     req.session.user = {

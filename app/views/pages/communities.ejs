@@ -1,298 +1,187 @@
 <%- include('../layouts/header') %>
 
-<style>
-  .community-card {
-    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-    border: 1px solid #34495e;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-  }
-  
-  .community-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-    border-color: #1da1f2;
-  }
-  
-  .category-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  .category-sports {
-    background-color: #e74c3c;
-    color: white;
-  }
-  
-  .category-politics {
-    background-color: #f39c12;
-    color: white;
-  }
-  
-  .category-entertainment {
-    background-color: #9b59b6;
-    color: white;
-  }
-  
-  .category-general {
-    background-color: #95a5a6;
-    color: white;
-  }
-  
-  .btn-sports {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    padding: 12px 24px;
-    font-weight: bold;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-  
-  .btn-sports:hover {
-    background-color: #c0392b;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    color: white;
-  }
-  
-  .btn-politics {
-    background-color: #f39c12;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    padding: 12px 24px;
-    font-weight: bold;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-  
-  .btn-politics:hover {
-    background-color: #e67e22;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    color: white;
-  }
-  
-  .btn-entertainment {
-    background-color: #9b59b6;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    padding: 12px 24px;
-    font-weight: bold;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-  
-  .btn-entertainment:hover {
-    background-color: #8e44ad;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    color: white;
-  }
-  
-  .tweet-preview {
-    background-color: #253341;
-    border: 1px solid #38444d;
-    border-radius: 8px;
-    padding: 12px;
-    margin: 8px 0;
-  }
-  
-  .tweet-preview:hover {
-    background-color: #2a3a4a;
-    border-color: #1da1f2;
-  }
-</style>
+  <style>
+    /* Twitter Style Sidebar */
+  </style>
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <%- include('../layouts/sidebar', { user: user }) %>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <%- include('../layouts/sidebar', { user: user }) %>
 
-    <!-- Main Content -->
-    <div class="col-md-9 offset-md-3">
-      <div class="p-4">
-        <!-- Header -->
-        <div class="community-card p-4 mb-4">
-          <h2 class="text-white mb-3">
-            <i class="fas fa-users me-2"></i>Communities
-          </h2>
-          <p class="text-muted">Discover and join communities based on your interests</p>
-        </div>
+        <!-- Main Content -->
+        <div class="col-md-9 offset-md-3">
+          <div class="p-4">
+            <!-- Header -->
+            <div class="community-card p-4 mb-4">
+              <h2 class="text-white mb-3">
+                <i class="fas fa-users me-2"></i>Communities
+              </h2>
+              <p class="text-muted">Discover and join communities based on your interests</p>
+            </div>
 
-        <!-- Category Filter -->
-        <div class="community-card p-4 mb-4">
-          <h4 class="text-white mb-3">
-            <i class="fas fa-filter me-2"></i>Browse Communities
-          </h4>
-          <p class="text-muted mb-3">Click on a category to view all tweets in that community</p>
-          <div class="d-flex gap-3">
-            <button type="button" class="btn btn-sports" onclick="filterByCategory('sports')" title="Click to view Sports community tweets">
-              SPORTS
-            </button>
-            <button type="button" class="btn btn-politics" onclick="filterByCategory('politics')" title="Click to view Politics community tweets">
-              POLITICS
-            </button>
-            <button type="button" class="btn btn-entertainment" onclick="filterByCategory('entertainment')" title="Click to view Entertainment community tweets">
-              ENTERTAINMENT
-            </button>
-          </div>
-        </div>
+            <!-- Category Filter -->
+            <div class="community-card p-4 mb-4">
+              <h4 class="text-white mb-3">
+                <i class="fas fa-filter me-2"></i>Browse Communities
+              </h4>
+              <p class="text-muted mb-3">Click on a category to view all tweets in that community</p>
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-sports" onclick="filterByCategory('sports')"
+                  title="Click to view Sports community tweets">
+                  SPORTS
+                </button>
+                <button type="button" class="btn btn-politics" onclick="filterByCategory('politics')"
+                  title="Click to view Politics community tweets">
+                  POLITICS
+                </button>
+                <button type="button" class="btn btn-entertainment" onclick="filterByCategory('entertainment')"
+                  title="Click to view Entertainment community tweets">
+                  ENTERTAINMENT
+                </button>
+              </div>
+            </div>
 
-        <!-- Communities List -->
-        <div id="communities-container">
-          <!-- Sports Community -->
-          <div class="community-card p-4 mb-4" data-category="sports">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h4 class="text-white mb-2">
-                  <i class="fas fa-futbol me-2"></i>Sports Community
-                </h4>
-                <span class="category-badge category-sports">Sports</span>
-              </div>
-              <a href="/communities/sports" class="btn btn-twitter">
-                <i class="fas fa-eye me-1"></i>View Tweets
-              </a>
-            </div>
-            <p class="text-muted mb-3">Discuss your favorite sports, athletes, and games. Share your thoughts on the latest matches and tournaments.</p>
-            
-            <!-- Recent Tweets Preview -->
-            <div class="tweet-preview">
-              <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-user-circle text-twitter me-2"></i>
-                <strong class="text-white">LeBron James</strong>
-                <span class="text-muted ms-2">@lbj23</span>
-              </div>
-              <p class="text-light mb-0">LBJ is the goat</p>
-              <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>2024-09-09 14:30:25
-              </small>
-            </div>
-            
-            <div class="mt-3">
-              <small class="text-muted">
-                <i class="fas fa-users me-1"></i>4 members
-                <i class="fas fa-comments ms-3 me-1"></i>100 tweets
-              </small>
-            </div>
-          </div>
+            <!-- Communities List -->
+            <div id="communities-container">
+              <!-- Sports Community -->
+              <div class="community-card p-4 mb-4" data-category="sports">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h4 class="text-white mb-2">
+                      <i class="fas fa-futbol me-2"></i>Sports Community
+                    </h4>
+                    <span class="category-badge category-sports">Sports</span>
+                  </div>
+                  <a href="/communities/sports" class="btn btn-twitter">
+                    <i class="fas fa-eye me-1"></i>View Tweets
+                  </a>
+                </div>
+                <p class="text-muted mb-3">Discuss your favorite sports, athletes, and games. Share your thoughts on the
+                  latest matches and tournaments.</p>
 
-          <!-- Politics Community -->
-          <div class="community-card p-4 mb-4" data-category="politics">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h4 class="text-white mb-2">
-                  <i class="fas fa-vote-yea me-2"></i>Politics & News
-                </h4>
-                <span class="category-badge category-politics">Politics</span>
-              </div>
-              <a href="/communities/politics" class="btn btn-twitter">
-                <i class="fas fa-eye me-1"></i>View Tweets
-              </a>
-            </div>
-            <p class="text-muted mb-3">Stay informed about current events, political discussions, and breaking news from around the world.</p>
-            
-            <!-- Recent Tweets Preview -->
-            <div class="tweet-preview">
-              <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-user-circle text-twitter me-2"></i>
-                <strong class="text-white">Donald Trump</strong>
-                <span class="text-muted ms-2">@realdonaldtrump</span>
-              </div>
-              <p class="text-light mb-0">MAGA！！！！</p>
-              <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>2024-09-09 16:45:12
-              </small>
-            </div>
-            
-            <div class="mt-3">
-              <small class="text-muted">
-                <i class="fas fa-users me-1"></i>1 member
-                <i class="fas fa-comments ms-3 me-1"></i>20 tweets
-              </small>
-            </div>
-          </div>
+                <!-- Recent Tweets Preview -->
+                <div class="tweet-preview">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-circle text-twitter me-2"></i>
+                    <strong class="text-white">LeBron James</strong>
+                    <span class="text-muted ms-2">@lbj23</span>
+                  </div>
+                  <p class="text-light mb-0">LBJ is the goat</p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>2024-09-09 14:30:25
+                  </small>
+                </div>
 
-          <!-- Entertainment Community -->
-          <div class="community-card p-4 mb-4" data-category="entertainment">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h4 class="text-white mb-2">
-                  <i class="fas fa-film me-2"></i>Entertainment Hub
-                </h4>
-                <span class="category-badge category-entertainment">Entertainment</span>
+                <div class="mt-3">
+                  <small class="text-muted">
+                    <i class="fas fa-users me-1"></i>4 members
+                    <i class="fas fa-comments ms-3 me-1"></i>100 tweets
+                  </small>
+                </div>
               </div>
-              <a href="/communities/entertainment" class="btn btn-twitter">
-                <i class="fas fa-eye me-1"></i>View Tweets
-              </a>
-            </div>
-            <p class="text-muted mb-3">Share your favorite movies, TV shows, music, and entertainment content. Discuss the latest releases and classics.</p>
-            
-            <!-- Recent Tweets Preview -->
-            <div class="tweet-preview">
-              <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-user-circle text-twitter me-2"></i>
-                <strong class="text-white">Ryan Gosling</strong>
-                <span class="text-muted ms-2">@ryangosling</span>
+
+              <!-- Politics Community -->
+              <div class="community-card p-4 mb-4" data-category="politics">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h4 class="text-white mb-2">
+                      <i class="fas fa-vote-yea me-2"></i>Politics & News
+                    </h4>
+                    <span class="category-badge category-politics">Politics</span>
+                  </div>
+                  <a href="/communities/politics" class="btn btn-twitter">
+                    <i class="fas fa-eye me-1"></i>View Tweets
+                  </a>
+                </div>
+                <p class="text-muted mb-3">Stay informed about current events, political discussions, and breaking news
+                  from around the world.</p>
+
+                <!-- Recent Tweets Preview -->
+                <div class="tweet-preview">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-circle text-twitter me-2"></i>
+                    <strong class="text-white">Donald Trump</strong>
+                    <span class="text-muted ms-2">@realdonaldtrump</span>
+                  </div>
+                  <p class="text-light mb-0">MAGA！！！！</p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>2024-09-09 16:45:12
+                  </small>
+                </div>
+
+                <div class="mt-3">
+                  <small class="text-muted">
+                    <i class="fas fa-users me-1"></i>1 member
+                    <i class="fas fa-comments ms-3 me-1"></i>20 tweets
+                  </small>
+                </div>
               </div>
-              <p class="text-light mb-0">I drive</p>
-              <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>2024-09-09 18:20:33
-              </small>
-            </div>
-            
-            <div class="tweet-preview mt-2">
-              <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-user-circle text-twitter me-2"></i>
-                <strong class="text-white">Community TV</strong>
-                <span class="text-muted ms-2">@communitytv</span>
+
+              <!-- Entertainment Community -->
+              <div class="community-card p-4 mb-4" data-category="entertainment">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h4 class="text-white mb-2">
+                      <i class="fas fa-film me-2"></i>Entertainment Hub
+                    </h4>
+                    <span class="category-badge category-entertainment">Entertainment</span>
+                  </div>
+                  <a href="/communities/entertainment" class="btn btn-twitter">
+                    <i class="fas fa-eye me-1"></i>View Tweets
+                  </a>
+                </div>
+                <p class="text-muted mb-3">Share your favorite movies, TV shows, music, and entertainment content.
+                  Discuss the latest releases and classics.</p>
+
+                <!-- Recent Tweets Preview -->
+                <div class="tweet-preview">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-circle text-twitter me-2"></i>
+                    <strong class="text-white">Ryan Gosling</strong>
+                    <span class="text-muted ms-2">@ryangosling</span>
+                  </div>
+                  <p class="text-light mb-0">I drive</p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>2024-09-09 18:20:33
+                  </small>
+                </div>
+
+                <div class="tweet-preview mt-2">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-circle text-twitter me-2"></i>
+                    <strong class="text-white">Community TV</strong>
+                    <span class="text-muted ms-2">@communitytv</span>
+                  </div>
+                  <p class="text-light mb-0">SIX SEASONS AND A MOVIE</p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>2024-09-09 20:15:45
+                  </small>
+                </div>
+
+                <div class="mt-3">
+                  <small class="text-muted">
+                    <i class="fas fa-users me-1"></i>2 members
+                    <i class="fas fa-comments ms-3 me-1"></i>25 tweets
+                  </small>
+                </div>
               </div>
-              <p class="text-light mb-0">SIX SEASONS AND A MOVIE</p>
-              <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>2024-09-09 20:15:45
-              </small>
-            </div>
-            
-            <div class="mt-3">
-              <small class="text-muted">
-                <i class="fas fa-users me-1"></i>2 members
-                <i class="fas fa-comments ms-3 me-1"></i>25 tweets
-              </small>
             </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
-</div>
 
-<script>
-  function showUserInfo() {
-    alert('User info:\nName: <%= user.name %>\nUsername: @<%= user.username %>\nEmail: <%= user.email %>');
-  }
+  <script>
+    function showUserInfo() {
+      alert('User info:\nName: <%= user.name %>\nUsername: @<%= user.username %>\nEmail: <%= user.email %>');
+    }
 
-  function filterByCategory(category) {
-    // 直接跳转到对应的社群页面
-    window.location.href = `/communities/${category}`;
-  }
+    function filterByCategory(category) {
+      // 直接跳转到对应的社群页面
+      window.location.href = `/communities/${category}`;
+    }
 
-</script>
+  </script>
 
-<%- include('../layouts/footer') %>
+  <%- include('../layouts/footer') %>
