@@ -4,7 +4,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const fetch = require('node-fetch');
 // Read API key from environment for security
 const API_KEY = process.env.GOOGLE_API_KEY;
-const ZHIPU_API_KEY ="d5206613c7d547ca9f8035300561cf02.U0IvpBxZpBZWyVry"
+const ZHIPU_API_KEY =process.env.ZHIPU_API_KEY;
 const ai = new GoogleGenerativeAI(API_KEY);
 
 // Helper: call model with timeout and optional retry
