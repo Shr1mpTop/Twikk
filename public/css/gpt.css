@@ -392,3 +392,101 @@ canvas {
 }
 
 /* 图片上传 */
+/* 模型选择器：固定在页面最顶部，不随滚动移动 */
+.model-selector {
+  position: fixed; /* 固定定位，相对于视口 */
+  top: 0; /* 距离顶部0px */
+ left: 58%;/* 距离左侧0px */
+  width: 100%; /* 占满整个宽度 */
+  z-index: 9999; /* 最高层级，避免被星空背景/聊天区遮挡 */
+  padding: 12px 20px; /* 上下内边距12px，左右20px */
+  box-sizing: border-box; /* 确保padding不撑大宽度 */
+  background-color: rgba(0, 0, 0, 0.2); /* 透明黑背景，融合星空 */
+  backdrop-filter: blur(8px); /* 毛玻璃效果，增强透明质感 */
+}
+
+/* 下拉按钮：适配黑色背景 */
+.dropdown-btn {
+  background-color: rgba(30, 30, 40, 0.5); /* 深灰半透背景 */
+  color: #ffffff; /* 白色文字，清晰可见 */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* 淡白透明边框 */
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.dropdown-btn:hover {
+  background-color: rgba(50, 50, 70, 0.6); /* hover时稍亮，增强交互感 */
+}
+
+/* 下拉内容：固定顶部下方，不随滚动移动 */
+.dropdown {
+  position: relative; /* 子元素绝对定位的参考 */
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%; /* 下拉内容在按钮正下方 */
+  left: 0;
+  min-width: 180px;
+  background-color: rgba(20, 20, 30, 0.8); /* 深黑半透背景 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 6px 6px; /* 只给底部圆角，与按钮衔接更自然 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 9999; /* 确保下拉内容也在最高层级 */
+  overflow: hidden;
+}
+
+/* 下拉选项：适配黑色背景 */
+.dropdown-content a {
+  color: #f0f0f0; /* 浅灰文字，比纯白更柔和 */
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+  background-color: rgba(80, 120, 200, 0.3); /* 淡蓝半透hover效果，不刺眼 */
+}
+
+/* 选中项：明显区分 */
+.dropdown-content a.selected {
+  background-color: rgba(100, 149, 237, 0.4); /* CornflowerBlue半透，突出选中状态 */
+  color: #ffffff;
+}
+
+/* 下拉箭头：旋转动画 */
+.caret {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+/* 显示下拉框时的箭头旋转 */
+.dropdown.active .caret {
+  transform: rotate(180deg);
+}
+
+/* 下拉框淡入动画，增强体验 */
+.dropdown.active .dropdown-content {
+  display: block;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 关键：给聊天区顶部加padding，避免被固定的下拉菜单遮挡 */
+.chat-area {
+  margin-top: 60px; /* 数值等于.dropdown-btn的高度+model-selector的padding，确保不遮挡 */
+  /* 保留你原有chat-area的其他样式 */
+}

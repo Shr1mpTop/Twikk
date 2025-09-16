@@ -66,53 +66,100 @@ function createMessage(message, type, isLoading = false) {
     return msgDiv;
 }
 
-// 处理发送消息的函数
-function sendMessage() {
-    // 1. 获取用户输入的消息
-    const message = textarea.value.trim();
-    if (!message) return;
 
-    // 2. 在前端显示用户消息气泡
-    createMessage(message, 'user');
+// 模型选择相关变量
+let selectedModel = 'gemini-2.0-flash-lite'; // 默认模型
+const dropdownBtn = document.querySelector('.dropdown-btn');
+const dropdown = document.querySelector('.dropdown');
+const modelOptions = document.querySelectorAll('.dropdown-content a');
 
-    // 3. 清空输入框
-    textarea.value = '';
-    const loadingElement = createMessage('', 'ai', true);
-    // 4. 使用 fetch API 向后端发送消息
-    fetch('/api/chat', {
-        method: 'POST',
-        // 告诉后端，我们发送的是 JSON 数据
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        // 将 JavaScript 变量 (message) 转换为 JSON 字符串，放在请求体中
-        body: JSON.stringify({ message: message })
-    })
-        // 5. 等待后端响应
-        .then(response => {
-            // 检查响应是否成功
-            if (!response.ok) {
-                throw new Error('网络请求失败');
-            }
-            // 解析 JSON 格式的响应体
-            return response.json();
-        })
-        // 6. 处理后端返回的数据 (AI 的回复)
-        .then(data => {
-            // 在前端显示 AI 的回复
-            loadingElement.innerHTML = ''; // 清空加载图标
-            loadingElement.textContent = data.reply; // 显示回复文字
-            chatArea.scrollTop = chatArea.scrollHeight; // 确保回复可见
-        })
-        // 7. 捕获并处理任何错误
-        .catch(error => {
-            console.error('获取AI回复出错:', error);
-            loadingElement.innerHTML = '';
-            loadingElement.textContent = "AI调用出错,请稍后再试。";
-            chatArea.scrollTop = chatArea.scrollHeight; // 滚动到底部
-        });
+// 初始化显示当前选中的模型
+updateDropdownText();
+
+// 下拉框开关
+dropdownBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  dropdown.classList.toggle('active');
+});
+
+// 点击其他区域关闭下拉框
+document.addEventListener('click', () => {
+  dropdown.classList.remove('active');
+});
+
+// 模型选择
+modelOptions.forEach(option => {
+  option.addEventListener('click', (e) => {
+    e.preventDefault();
+    // 更新选中状态
+    modelOptions.forEach(opt => opt.classList.remove('selected'));
+    option.classList.add('selected');
+    // 保存选中的模型
+    selectedModel = option.dataset.model;
+    // 更新按钮文本
+    updateDropdownText();
+    // 关闭下拉框
+    dropdown.classList.remove('active');
+  });
+});
+
+// 更新下拉按钮显示的文本
+function updateDropdownText() {
+  const modelName = selectedModel.includes('gemini') ? 'Gemini' : '智谱GLM';
+  dropdownBtn.innerHTML = `当前模型: ${modelName} <span class="caret">▼</span>`;
+  
+  // 同步选中状态
+  modelOptions.forEach(option => {
+    if (option.dataset.model === selectedModel) {
+      option.classList.add('selected');
+    } else {
+      option.classList.remove('selected');
+    }
+  });
 }
 
+// 修改sendMessage函数中的fetch请求，添加model参数
+function sendMessage() {
+  // 1. 获取用户输入的消息
+  const message = textarea.value.trim();
+  if (!message) return;
+
+  // 2. 在前端显示用户消息气泡
+  createMessage(message, 'user');
+
+  // 3. 清空输入框
+  textarea.value = '';
+  const loadingElement = createMessage('', 'ai', true);
+  
+  // 4. 发送请求（添加model参数）
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 
+      message: message,
+      model: selectedModel  // 新增：传递选中的模型
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('网络请求失败');
+    }
+    return response.json();
+  })
+  .then(data => {
+    loadingElement.innerHTML = '';
+    loadingElement.textContent = data.reply;
+    chatArea.scrollTop = chatArea.scrollHeight;
+  })
+  .catch(error => {
+    console.error('获取AI回复出错:', error);
+    loadingElement.innerHTML = '';
+    loadingElement.textContent = "AI调用出错,请稍后再试。";
+    chatArea.scrollTop = chatArea.scrollHeight;
+  });
+}
 // 背景
 const STAR_COLOR = '#FFF';
 const STAR_SIZE = 3;
