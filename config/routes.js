@@ -24,6 +24,7 @@ module.exports = function (app) {
   
   // MetaMask login
   app.post('/auth/metamask', users.postMetaMaskLogin);
+  app.post('/auth/unlink-wallet', users.postUnlinkWallet);
 
   app.get('/logout', users.logout);
 

@@ -237,6 +237,19 @@
                   </p>
                 </div>
               </div>
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <p><strong>Wallet:</strong>
+                    <% if (user.walletAddress) { %>
+                      <span class="text-success">Linked: <%= user.walletAddress %></span>
+                      <button id="unlink-wallet-btn" class="btn btn-sm btn-outline-danger ms-2">Unlink Wallet</button>
+                    <% } else { %>
+                      <span class="text-muted">Not linked</span>
+                      <button id="metamask-login-btn" class="btn btn-sm btn-outline-primary ms-2">Link Wallet</button>
+                    <% } %>
+                  </p>
+                </div>
+              </div>
             </div>
 
             <!-- Compose -->
@@ -739,3 +752,6 @@
   </script>
 
   <%- include('../layouts/footer') %>
+
+  <!-- MetaMask client script (ensure Link/Unlink buttons work on dashboard) -->
+  <script src="/js/metamask.js"></script>

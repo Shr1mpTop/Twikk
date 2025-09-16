@@ -31,6 +31,7 @@
                                 <% } %>
 
                                     <form action="/register" method="POST">
+                                        <input type="hidden" name="walletAddress" value="<%= walletAddress || '' %>">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Full name</label>
                                             <input type="text" class="form-control" id="name" name="name" required>
@@ -39,26 +40,26 @@
                                         <div class="mb-3">
                                             <label for="username" class="form-label">Username</label>
                                             <input type="text" class="form-control" id="username" name="username"
-                                                required>
+                                                required autocomplete="username">
                                             <div class="form-text text-muted">This will be your @username</div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="email" name="email" required>
+                                            <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="password" class="form-label">Password</label>
                                             <input type="password" class="form-control" id="password" name="password"
-                                                required minlength="6">
+                                                required minlength="6" autocomplete="new-password">
                                             <div class="form-text text-muted">Password must be at least 6 characters</div>
                                         </div>
 
                                         <div class="mb-4">
                                             <label for="confirmPassword" class="form-label">Confirm password</label>
                                             <input type="password" class="form-control" id="confirmPassword"
-                                                name="confirmPassword" required>
+                                                name="confirmPassword" required autocomplete="new-password">
                                         </div>
 
                                         <div class="d-grid gap-2">
