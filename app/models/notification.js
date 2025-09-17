@@ -26,6 +26,11 @@ const notificationSchema = new mongoose.Schema({
     ref: 'Tweet',
     required: true
   },
+  // 新增：用于存储回复/评论内容的字段
+  content: {
+    type: String,
+    required: false // 评论内容不是必需的，因为点赞通知不需要
+  },
   // 通知是否已读
   read: {
     type: Boolean,
