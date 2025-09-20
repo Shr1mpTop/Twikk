@@ -70,16 +70,94 @@ exports.create = async (req, res) => {
       content
     };
 
-    // 如果选择了社群，添加到推文数据中
-    if (req.body.category && req.body.category.trim() !== '') {
-      tweetData.category = req.body.category.trim();
+    // If a community/category was selected, validate and add
+    const allowedCategories = ['general', 'sports', 'politics', 'entertainment'];
+    const cat = (req.body.category || '').toString().trim().toLowerCase();
+    if (cat && allowedCategories.includes(cat)) {
+      tweetData.category = cat;
+    } else {
+      tweetData.category = 'general';
     }
 
-    await Tweet.create(tweetData);
+    const created = await Tweet.create(tweetData);
+    // If AJAX (XHR) or client expects JSON, return JSON payload for client-side rendering
+    const wantsJson = req.xhr || (req.headers.accept && req.headers.accept.indexOf('application/json') !== -1);
+    if (wantsJson) {
+      const tweetObj = created.toObject ? created.toObject() : created;
+      // mark as not liked by current user by default
+      tweetObj.isLikedByCurrentUser = false;
+      tweetObj.likesCount = tweetObj.likesCount || 0;
+      tweetObj.comments = tweetObj.comments || [];
+      return res.json({ ok: true, tweet: tweetObj });
+    }
+
     res.redirect('/dashboard');
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
+  }
+};
+
+// Like/unlike a tweet
+exports.like = async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Unauthorized' });
+
+  try {
+    const tweetId = req.params.id;
+    const userId = req.session.user.id;
+
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) return res.status(404).json({ error: 'Tweet not found' });
+
+    const alreadyLiked = Array.isArray(tweet.likedBy) && tweet.likedBy.some(id => id.toString() === userId);
+
+    if (alreadyLiked) {
+      // Unlike
+      tweet.likedBy = tweet.likedBy.filter(id => id.toString() !== userId);
+      tweet.likesCount = Math.max(0, (tweet.likesCount || 0) - 1);
+      await tweet.save();
+      return res.json({ ok: true, likesCount: tweet.likesCount, action: 'unliked' });
+    } else {
+      // Like
+      tweet.likedBy = tweet.likedBy || [];
+      tweet.likedBy.push(req.session.user.id);
+      tweet.likesCount = (tweet.likesCount || 0) + 1;
+      await tweet.save();
+      return res.json({ ok: true, likesCount: tweet.likesCount, action: 'liked' });
+    }
+  } catch (err) {
+    console.error('Like error:', err);
+    res.status(500).json({ error: 'Like failed' });
+  }
+};
+
+// Add a comment to a tweet
+exports.comment = async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Unauthorized' });
+
+  try {
+    const tweetId = req.params.id;
+    const content = (req.body.content || '').trim();
+    if (!content) return res.status(400).json({ error: 'Comment cannot be empty' });
+
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) return res.status(404).json({ error: 'Tweet not found' });
+
+    const comment = {
+      authorId: req.session.user.id,
+      authorName: req.session.user.name || req.session.user.username || 'Anonymous',
+      content,
+      createdAt: new Date()
+    };
+
+    tweet.comments = tweet.comments || [];
+    tweet.comments.push(comment);
+    await tweet.save();
+
+    res.json({ ok: true, comment });
+  } catch (err) {
+    console.error('Comment error:', err);
+    res.status(500).json({ error: 'Comment failed' });
   }
 };
 

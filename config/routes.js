@@ -2,7 +2,7 @@
 const path = require('path');
 const { chatController } = require('../app/controllers/grok.js');
 const users = require(path.join(__dirname, '..', 'app', 'controllers', 'users'));
-const tweets = require(path.join(__dirname, '..', 'app', 'controllers', 'tweets'));
+// tweets (timeline) feature removed
 const communities = require(path.join(__dirname, '..', 'app', 'controllers', 'communities'));
 
 module.exports = function (app) {
@@ -28,17 +28,18 @@ module.exports = function (app) {
 
   app.get('/logout', users.logout);
 
-  // Dashboard (shows timeline)
-  app.get('/dashboard', tweets.timeline);
+  // Dashboard (timeline)
+  const tweetsController = require(path.join(__dirname, '..', 'app', 'controllers', 'tweets'));
+  app.get('/dashboard', tweetsController.timeline);
 
-  // Post tweet
-  app.post('/tweet', tweets.create);
-  
-  // API: get more tweets (infinite scroll)
-  app.get('/api/tweets', tweets.getMoreTweets);
-  
-  // API: search tweets
-  app.get('/api/search', tweets.search);
+  // Like / Comment APIs for tweets
+  app.post('/like/:id', tweetsController.like);
+  app.post('/comment/:id', tweetsController.comment);
+  app.post('/tweet', tweetsController.create);
+
+  // API: timeline pagination and search
+  app.get('/api/tweets', tweetsController.getMoreTweets);
+  app.get('/api/search', tweetsController.search);
 
   
   // Communities page

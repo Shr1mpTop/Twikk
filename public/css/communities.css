@@ -154,15 +154,4 @@
     color: white;
 }
 
-.tweet-preview {
-    background-color: #253341;
-    border: 1px solid #38444d;
-    border-radius: 8px;
-    padding: 12px;
-    margin: 8px 0;
-}
-
-.tweet-preview:hover {
-    background-color: #2a3a4a;
-    border-color: #1da1f2;
-}
+/* Tweet preview styles removed */

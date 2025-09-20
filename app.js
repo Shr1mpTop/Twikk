@@ -77,7 +77,6 @@ mongoose.connection.on('disconnected', () => {
 
 // 导入模型
 require('./app/models/user');
-require('./app/models/tweet');
 require('./app/models/notification');
 
 // 中间件

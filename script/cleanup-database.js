@@ -21,10 +21,9 @@ const connectDB = async () => {
 // 清理数据库
 const cleanupDatabase = async () => {
     try {
-        // 导入模型
-        const User = require('../app/models/user');
-        const Tweet = require('../app/models/tweet');
-        const Notification = require('../app/models/notification');
+    // Import models
+    const User = require('../app/models/user');
+    const Notification = require('../app/models/notification');
         
         console.log('Starting database cleanup...');
         
@@ -40,13 +39,9 @@ const cleanupDatabase = async () => {
             console.log(`  - ${user.name} (${user.email})`);
         });
         
-        // 2. 删除所有推文
-        const deletedTweets = await Tweet.deleteMany({});
-        console.log(`Deleted ${deletedTweets.deletedCount} tweets`);
-        
-        // 3. 删除所有通知
-        const deletedNotifications = await Notification.deleteMany({});
-        console.log(`Deleted ${deletedNotifications.deletedCount} notifications`);
+    // 2. Delete all notifications
+    const deletedNotifications = await Notification.deleteMany({});
+    console.log(`Deleted ${deletedNotifications.deletedCount} notifications`);
         
         // 4. 删除除了@e.ntu.edu.sg域名外的所有用户
         const deletedUsers = await User.deleteMany({ 
@@ -54,15 +49,13 @@ const cleanupDatabase = async () => {
         });
         console.log(`Deleted ${deletedUsers.deletedCount} users (excluding @e.ntu.edu.sg users)`);
         
-        // 5. 验证结果
-        const remainingUsers = await User.countDocuments();
-        const remainingTweets = await Tweet.countDocuments();
-        const remainingNotifications = await Notification.countDocuments();
-        
-        console.log('\nCleanup Results:');
-        console.log(`Remaining users: ${remainingUsers}`);
-        console.log(`Remaining tweets: ${remainingTweets}`);
-        console.log(`Remaining notifications: ${remainingNotifications}`);
+    // 5. Verify results
+    const remainingUsers = await User.countDocuments();
+    const remainingNotifications = await Notification.countDocuments();
+
+    console.log('\nCleanup Results:');
+    console.log(`Remaining users: ${remainingUsers}`);
+    console.log(`Remaining notifications: ${remainingNotifications}`);
         
         // 显示保留的用户
         const keptUsers = await User.find({}, { name: 1, email: 1 });
@@ -71,7 +64,7 @@ const cleanupDatabase = async () => {
             console.log(`  - ${user.name} (${user.email})`);
         });
         
-        if (remainingTweets === 0 && remainingNotifications === 0) {
+        if (remainingNotifications === 0) {
             console.log('Database cleanup completed successfully!');
         } else {
             console.log('Cleanup may not have completed as expected');
