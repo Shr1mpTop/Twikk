@@ -187,10 +187,12 @@ body {
     background: linear-gradient(145deg, #253341, #2a3a4a) !important;
     border: 1px solid #38444d !important;
     border-radius: 12px !important;
-    transition: all 0.3s ease !important;
+    transition: all 0.2s ease !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* allow content to flow naturally */
+    box-sizing: border-box;
+    padding: 12px !important;
 }
 
 .tweet-card:hover {
@@ -206,7 +208,81 @@ body {
     font-size: 16px !important;
     line-height: 1.5 !important;
     color: #ecf0f1 !important;
-    margin-bottom: 8px !important;
+    margin: 0 0 8px 0 !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    text-indent: 0 !important;
+}
+
+/* 推文头部（头像 + 名称） */
+.tweet-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+/* 避免头像或名字引起内容缩进 */
+.tweet-header .fa-user-circle,
+.tweet-header strong {
+    flex: 0 0 auto;
+}
+
+/* 推文主体容器（已存在），增加更明显的内边距和背景 */
+.tweet-content {
+    display: block;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+}
+
+/* Timeline layout */
+.timeline {
+    margin: 0;
+    padding: 0;
+}
+
+.timeline-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.timeline-item {
+    margin: 0;
+    padding: 0;
+}
+
+/* Make tweet card compact */
+.tweet-card {
+    padding: 10px !important;
+}
+
+.tweet-content { padding-left: 8px !important; padding-right: 8px !important; }
+
+.tweet-header .fa-user-circle { margin-right: 8px !important; }
+
+/* 推文内容容器：作为一个 box 放置推文文本，自动换行且无首行缩进 */
+.tweet-content {
+    display: block;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    /* 避免盒子内文字被强制截断 */
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
 }
 
 /* 推文元数据 */

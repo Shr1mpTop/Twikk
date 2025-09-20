@@ -294,72 +294,67 @@
               <h4 class="text-twitter mb-3">
                 <i class="fas fa-stream me-2"></i>Timeline
               </h4>
-              <div id="tweets-container">
-                <% if (tweets && tweets.length> 0) { %>
-                  <% tweets.forEach(t=> { %>
-                    <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="<%= t._id %>">
-                      <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-user-circle text-twitter me-2"></i>
-                        <strong class="text-white">
-                          <%= t.authorName %>
-                        </strong>
-                        <span class="text-muted ms-2">@<%= t.authorName.toLowerCase().replace(/\s+/g, '' ) %></span>
-                      </div>
-                      <p class="text-light mb-0">
-                        <%= t.content %>
-                      </p>
-                      <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
-                        <small class="text-muted">
-                          <i class="fas fa-clock me-1"></i>
-                          <%= new Date(t.createdAt).toLocaleString() %>
-                        </small>
-                        <div>
-                          <button class="btn btn-sm btn-like <%= t.isLikedByCurrentUser ? 'liked' : '' %>"
-                            data-tweet-id="<%= t._id %>">
-                            <i class="fas fa-heart"></i>
-                            <span class="likes-count">
-                              <%= t.likesCount || 0 %>
-                            </span>
-                          </button>
-                        </div>
-                      </div>
+              <section class="timeline">
+                <ul class="timeline-list" id="tweets-container">
+                  <% if (tweets && tweets.length> 0) { %>
+                    <% tweets.forEach(t=> { %>
+                      <li class="timeline-item">
+                        <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="<%= t._id %>">
+                          <div class="tweet-header mb-2">
+                            <i class="fas fa-user-circle text-twitter me-2"></i>
+                            <strong class="text-white">
+                              <%= t.authorName %>
+                            </strong>
+                            <span class="text-muted ms-2">@<%= t.authorName.toLowerCase().replace(/\s+/g, '' ) %></span>
+                          </div>
+                          <div class="tweet-content">
+                            <p class="text-light mb-0"><%= t.content %></p>
+                          </div>
+                          <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
+                            <small class="text-muted">
+                              <i class="fas fa-clock me-1"></i>
+                              <%= new Date(t.createdAt).toLocaleString() %>
+                            </small>
+                            <div>
+                              <button class="btn btn-sm btn-like <%= t.isLikedByCurrentUser ? 'liked' : '' %>"
+                                data-tweet-id="<%= t._id %>">
+                                <i class="fas fa-heart"></i>
+                                <span class="likes-count"><%= t.likesCount || 0 %></span>
+                              </button>
+                            </div>
+                          </div>
 
-                      <!-- 评论区 -->
-                      <div class="comments-section mt-3">
-                        <div class="comments-list">
-                          <% if (t.comments && t.comments.length> 0) { %>
-                            <% t.comments.slice(-3).forEach(c=> { %>
-                              <div class="comment mb-2">
-                                <strong class="text-white">
-                                  <%= c.authorName %>
-                                </strong>
-                                <span class="text-muted ms-2">
-                                  <%= new Date(c.createdAt).toLocaleString() %>
-                                </span>
-                                <p class="text-light mb-1">
-                                  <%= c.content %>
-                                </p>
-                              </div>
-                              <% }) %>
-                                <% } %>
-                        </div>
+                          <div class="comments-section mt-3">
+                            <div class="comments-list">
+                              <% if (t.comments && t.comments.length> 0) { %>
+                                <% t.comments.slice(-3).forEach(c=> { %>
+                                  <div class="comment mb-2">
+                                    <strong class="text-white"><%= c.authorName %></strong>
+                                    <span class="text-muted ms-2"><%= new Date(c.createdAt).toLocaleString() %></span>
+                                    <p class="text-light mb-1"><%= c.content %></p>
+                                  </div>
+                                <% }) %>
+                              <% } %>
+                            </div>
 
-                        <form class="comment-form d-flex mt-2" data-tweet-id="<%= t._id %>">
-                          <input type="text" name="content" class="form-control form-control-sm me-2"
-                            placeholder="Write a comment..." required maxlength="1000">
-                          <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
-                        </form>
-                      </div>
-                    </div>
+                            <form class="comment-form d-flex mt-2" data-tweet-id="<%= t._id %>">
+                              <input type="text" name="content" class="form-control form-control-sm me-2"
+                                placeholder="Write a comment..." required maxlength="1000">
+                              <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
+                            </form>
+                          </div>
+                        </div>
+                      </li>
                     <% }) %>
-                      <% } else { %>
-                        <div class="text-center text-muted py-5">
-                          <i class="fas fa-comments fa-3x mb-3"></i>
-                          <p>No tweets yet</p>
-                          <p>Start by posting your first one!</p>
-                        </div>
-                        <% } %>
-              </div>
+                  <% } else { %>
+                    <li class="text-center text-muted py-5">
+                      <i class="fas fa-comments fa-3x mb-3"></i>
+                      <p>No tweets yet</p>
+                      <p>Start by posting your first one!</p>
+                    </li>
+                  <% } %>
+                </ul>
+              </section>
 
               <!-- 加载更多按钮 -->
               <div id="load-more-container" class="text-center mt-4" style="display: none;">
@@ -447,50 +442,45 @@
           // 添加新推文到页面
           const tweetsContainer = document.getElementById('tweets-container');
           data.tweets.forEach(tweet => {
-            const tweetElement = document.createElement('div');
-            tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
-            tweetElement.setAttribute('data-tweet-id', tweet._id);
-            tweetElement.innerHTML = `
-            <div class="d-flex align-items-center mb-2">
-              <i class="fas fa-user-circle text-twitter me-2"></i>
-              <strong class="text-white">${tweet.authorName}</strong>
-              <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
-            </div>
-            <p class="text-light mb-0">${tweet.content}</p>
-            <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
-              <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
-              </small>
-              <div>
-                <button class="btn btn-sm btn-like ${tweet.isLikedByCurrentUser ? 'liked' : ''}" data-tweet-id="${tweet._id}">
-                  <i class="fas fa-heart"></i>
-                  <span class="likes-count">${tweet.likesCount || 0}</span>
-                </button>
+            const li = document.createElement('li');
+            li.className = 'timeline-item';
+            li.innerHTML = `
+              <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="${tweet._id}">
+                <div class="tweet-header mb-2">
+                  <i class="fas fa-user-circle text-twitter me-2"></i>
+                  <strong class="text-white">${tweet.authorName}</strong>
+                  <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
+                </div>
+                <div class="tweet-content">
+                  <p class="text-light mb-0">${tweet.content}</p>
+                </div>
+                <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
+                  <small class="text-muted"><i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}</small>
+                  <div>
+                    <button class="btn btn-sm btn-like ${tweet.isLikedByCurrentUser ? 'liked' : ''}" data-tweet-id="${tweet._id}">
+                      <i class="fas fa-heart"></i>
+                      <span class="likes-count">${tweet.likesCount || 0}</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="comments-section mt-3">
+                  <div class="comments-list">
+                    ${tweet.comments && tweet.comments.length > 0 ? tweet.comments.slice(-3).map(comment => `
+                      <div class="comment mb-2">
+                        <strong class="text-white">${comment.authorName}</strong>
+                        <span class="text-muted ms-2">${new Date(comment.createdAt).toLocaleString()}</span>
+                        <p class="text-light mb-1">${comment.content}</p>
+                      </div>
+                    `).join('') : ''}
+                  </div>
+                  <form class="comment-form d-flex mt-2" data-tweet-id="${tweet._id}">
+                    <input type="text" name="content" class="form-control form-control-sm me-2" placeholder="Write a comment..." required maxlength="1000">
+                    <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
+                  </form>
+                </div>
               </div>
-            </div>
-
-            <!-- 评论区 -->
-            <div class="comments-section mt-3">
-              <div class="comments-list">
-                ${tweet.comments && tweet.comments.length > 0 ? 
-                  tweet.comments.slice(-3).map(comment => `
-                    <div class="comment mb-2">
-                      <strong class="text-white">${comment.authorName}</strong>
-                      <span class="text-muted ms-2">${new Date(comment.createdAt).toLocaleString()}</span>
-                      <p class="text-light mb-1">${comment.content}</p>
-                    </div>
-                  `).join('') : ''
-                }
-              </div>
-
-              <form class="comment-form d-flex mt-2" data-tweet-id="${tweet._id}">
-                <input type="text" name="content" class="form-control form-control-sm me-2"
-                  placeholder="Write a comment..." required maxlength="1000">
-                <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
-              </form>
-            </div>
-          `;
-            tweetsContainer.appendChild(tweetElement);
+            `;
+            tweetsContainer.appendChild(li);
           });
 
           currentPage++;
@@ -580,11 +570,11 @@
 
       if (tweets.length === 0) {
         tweetsContainer.innerHTML = `
-        <div class="text-center py-5" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: 1px solid #38444d; border-radius: 12px;">
+        <li class="text-center py-5" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: 1px solid #38444d; border-radius: 12px;">
           <i class="fas fa-search fa-3x mb-3 text-light"></i>
           <p class="text-light">No tweets found for "${query}"</p>
           <p class="text-muted">Try different keywords</p>
-        </div>
+        </li>
       `;
       } else {
         // 显示搜索结果
@@ -596,61 +586,56 @@
       `;
 
         tweets.forEach(tweet => {
-          const tweetElement = document.createElement('div');
-          tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
-          tweetElement.setAttribute('data-tweet-id', tweet._id);
-          tweetElement.innerHTML = `
-          <div class="d-flex align-items-center mb-2">
-            <i class="fas fa-user-circle text-twitter me-2"></i>
-            <strong class="text-white">${tweet.authorName}</strong>
-            <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
-          </div>
-          <p class="text-light mb-0">${highlightSearchTerm(tweet.content, query)}</p>
-          <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
-            <small class="text-muted">
-              <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
-            </small>
-            <div>
-              <button class="btn btn-sm btn-like ${tweet.isLikedByCurrentUser ? 'liked' : ''}" data-tweet-id="${tweet._id}">
-                <i class="fas fa-heart"></i>
-                <span class="likes-count">${tweet.likesCount || 0}</span>
-              </button>
+          const li = document.createElement('li');
+          li.className = 'timeline-item';
+          li.innerHTML = `
+            <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="${tweet._id}">
+              <div class="tweet-header mb-2">
+                <i class="fas fa-user-circle text-twitter me-2"></i>
+                <strong class="text-white">${tweet.authorName}</strong>
+                <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
+              </div>
+              <div class="tweet-content">
+                <p class="text-light mb-0">${highlightSearchTerm(tweet.content, query)}</p>
+              </div>
+              <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
+                <small class="text-muted"><i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}</small>
+                <div>
+                  <button class="btn btn-sm btn-like ${tweet.isLikedByCurrentUser ? 'liked' : ''}" data-tweet-id="${tweet._id}">
+                    <i class="fas fa-heart"></i>
+                    <span class="likes-count">${tweet.likesCount || 0}</span>
+                  </button>
+                </div>
+              </div>
+              <div class="comments-section mt-3">
+                <div class="comments-list">
+                  ${tweet.comments && tweet.comments.length > 0 ? tweet.comments.slice(-3).map(comment => `
+                    <div class="comment mb-2">
+                      <strong class="text-white">${comment.authorName}</strong>
+                      <span class="text-muted ms-2">${new Date(comment.createdAt).toLocaleString()}</span>
+                      <p class="text-light mb-1">${comment.content}</p>
+                    </div>
+                  `).join('') : ''}
+                </div>
+                <form class="comment-form d-flex mt-2" data-tweet-id="${tweet._id}">
+                  <input type="text" name="content" class="form-control form-control-sm me-2" placeholder="Write a comment..." required maxlength="1000">
+                  <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
+                </form>
+              </div>
             </div>
-          </div>
-
-          <!-- 评论区 -->
-          <div class="comments-section mt-3">
-            <div class="comments-list">
-              ${tweet.comments && tweet.comments.length > 0 ? 
-                tweet.comments.slice(-3).map(comment => `
-                  <div class="comment mb-2">
-                    <strong class="text-white">${comment.authorName}</strong>
-                    <span class="text-muted ms-2">${new Date(comment.createdAt).toLocaleString()}</span>
-                    <p class="text-light mb-1">${comment.content}</p>
-                  </div>
-                `).join('') : ''
-              }
-            </div>
-
-            <form class="comment-form d-flex mt-2" data-tweet-id="${tweet._id}">
-              <input type="text" name="content" class="form-control form-control-sm me-2"
-                placeholder="Write a comment..." required maxlength="1000">
-              <button type="submit" class="btn btn-sm btn-twitter">Reply</button>
-            </form>
-          </div>
-        `;
-          tweetsContainer.appendChild(tweetElement);
+          `;
+          tweetsContainer.appendChild(li);
         });
 
         // 添加返回按钮
-        const returnButton = document.createElement('div');
-        returnButton.className = 'text-center mt-4';
-        returnButton.innerHTML = `
+        const returnLi = document.createElement('li');
+        returnLi.className = 'text-center mt-4';
+        returnLi.innerHTML = `
         <button class="btn btn-outline-twitter" onclick="returnToTimeline()">
           <i class="fas fa-arrow-left me-2"></i>Back to Timeline
         </button>
       `;
-        tweetsContainer.appendChild(returnButton);
+        tweetsContainer.appendChild(returnLi);
       }
     }
 

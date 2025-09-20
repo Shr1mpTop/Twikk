@@ -148,12 +148,14 @@
             <% if (tweets && tweets.length > 0) { %>
               <% tweets.forEach(tweet => { %>
                 <div class="tweet-card mb-3 p-3 bg-light border rounded shadow-sm" data-tweet-id="<%= tweet._id %>">
-                  <div class="d-flex align-items-center mb-2">
+                  <div class="tweet-header mb-2">
                     <i class="fas fa-user-circle text-twitter me-2"></i>
                     <strong class="text-white"><%= tweet.authorName %></strong>
                     <span class="text-muted ms-2">@<%= tweet.authorName.toLowerCase().replace(/\s+/g, '') %></span>
                   </div>
-                  <p class="text-light mb-0"><%= tweet.content %></p>
+                  <div class="tweet-content">
+                    <p class="text-light mb-0"><%= tweet.content %></p>
+                  </div>
                   <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
                     <small class="text-muted">
                       <i class="fas fa-clock me-1"></i><%= new Date(tweet.createdAt).toLocaleString() %>
@@ -281,12 +283,14 @@
           const tweetElement = document.createElement('div');
           tweetElement.className = 'tweet-card mb-3 p-3 bg-light border rounded shadow-sm';
           tweetElement.innerHTML = `
-            <div class="d-flex align-items-center mb-2">
+            <div class="tweet-header mb-2">
               <i class="fas fa-user-circle text-twitter me-2"></i>
               <strong class="text-white">${tweet.authorName}</strong>
               <span class="text-muted ms-2">@${tweet.authorName.toLowerCase().replace(/\s+/g, '')}</span>
             </div>
-            <p class="text-light mb-0">${tweet.content}</p>
+            <div class="tweet-content">
+              <p class="text-light mb-0">${tweet.content}</p>
+            </div>
             <div class="tweet-meta d-flex justify-content-between align-items-center mt-2">
               <small class="text-muted">
                 <i class="fas fa-clock me-1"></i>${new Date(tweet.createdAt).toLocaleString()}
